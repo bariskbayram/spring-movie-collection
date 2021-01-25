@@ -1,6 +1,6 @@
 package com.bkb.springmoviecollection.model.entity;
 
-import com.bkb.springmoviecollection.model.dto.MovieDTO;
+import com.bkb.springmoviecollection.model.dto.MovieDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,7 +8,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -43,8 +42,23 @@ public class Movie {
   @JoinTable(name = "movie_genre",
       joinColumns = @JoinColumn(name = "movie_id"),
       inverseJoinColumns = @JoinColumn(name = "genre_id"),
-      uniqueConstraints = @UniqueConstraint(name = "movie_genre_pk", columnNames = {"movie_id", "genre_id"}))
+      uniqueConstraints = @UniqueConstraint(
+          name = "movie_genre_unique",
+          columnNames = {"movie_id", "genre_id"}))
   private List<Genre> genres = new ArrayList<>();
+
+  @ManyToMany
+  @JoinTable(name = "movie_language",
+      joinColumns = @JoinColumn(name = "movie_id"),
+      inverseJoinColumns = @JoinColumn(name = "language_id"),
+      uniqueConstraints = @UniqueConstraint(
+          name = "movie_language_unique",
+          columnNames = {"movie_id", "language_id"}))
+  private List<Language> languages = new ArrayList<>();
+
+  @OneToMany(mappedBy = "movie",
+      cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<MoviePerformer> performersAssoc = new ArrayList<>();
 
   public Movie(String title, int releaseYear, String description, String mediaPath) {
     this.title = title;
@@ -57,7 +71,11 @@ public class Movie {
     genres.add(genre);
   }
 
-  public static Movie from(MovieDTO movieDTO) {
+  public void addLanguage(Language language) {
+    languages.add(language);
+  }
+
+  public static Movie from(MovieDto movieDTO) {
     Movie movie = new Movie();
     movie.setTitle(movieDTO.getTitle());
     movie.setDescription(movieDTO.getDescription());
@@ -72,22 +90,5 @@ public class Movie {
         "movie_id=" + movieId +
         ", title='" + title + '\'' +
         '}';
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(movieId);
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null || getClass() != obj.getClass()) {
-      return false;
-    }
-    Movie movie = (Movie) obj;
-    return Objects.equals(movieId, movie.getMovieId());
   }
 }

@@ -21,18 +21,19 @@ public class GenreService {
   }
 
   public Genre getGenreById(int genreId) {
-    return genreRepository.findById(genreId).orElseThrow( () ->
+    return genreRepository.findById(genreId).orElseThrow(() ->
         new TNotFoundException(genreId, Genre.class));
+  }
+
+  public List<Genre> getGenreByMovieId(int movieId) {
+    return genreRepository.findAllByMoviesMovieId(movieId);
   }
 
   public Genre addGenre(Genre genre) {
     return genreRepository.save(genre);
   }
 
-  public void deleteGenreById(int id) {
-    genreRepository.deleteById(id);
+  public void deleteGenreById(int genreId) {
+    genreRepository.deleteById(genreId);
   }
-
-
-
 }

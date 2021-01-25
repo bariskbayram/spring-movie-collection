@@ -1,6 +1,6 @@
 package com.bkb.springmoviecollection.controller;
 
-import com.bkb.springmoviecollection.model.dto.GenreDTO;
+import com.bkb.springmoviecollection.model.dto.GenreDto;
 import com.bkb.springmoviecollection.model.entity.Genre;
 import com.bkb.springmoviecollection.service.GenreService;
 import org.springframework.web.bind.annotation.*;
@@ -19,28 +19,36 @@ public class GenreController {
   }
 
   @GetMapping("get_all_genres")
-  public List<GenreDTO> getAllGenres() {
+  public List<GenreDto> getAllGenres() {
     List<Genre> genres = genreService.getAllGenres();
-    List<GenreDTO> genreDTOS =
-        genres.stream().map(GenreDTO::from).collect(Collectors.toList());
-    return genreDTOS;
+    List<GenreDto> genreDtos =
+        genres.stream().map(GenreDto::from).collect(Collectors.toList());
+    return genreDtos;
   }
 
   @GetMapping("get_by_id/{id}")
-  public GenreDTO getGenreById(@RequestParam("id") int genreId) {
+  public GenreDto getGenreById(@RequestParam("id") int genreId) {
     Genre genre = genreService.getGenreById(genreId);
-    return GenreDTO.from(genre);
+    return GenreDto.from(genre);
+  }
+
+  @GetMapping("get_by_movie_id/{id}")
+  public List<GenreDto> getGenreByMovieId(@RequestParam("id") int movieId) {
+    List<Genre> genres = genreService.getGenreByMovieId(movieId);
+    List<GenreDto> genreDtos = genres.stream()
+        .map(GenreDto::from).collect(Collectors.toList());
+    return genreDtos;
   }
 
   @PostMapping("add_genre")
-  public GenreDTO addGenre(@RequestBody GenreDTO genreDTO) {
+  public GenreDto addGenre(@RequestBody GenreDto genreDTO) {
     Genre genre = genreService.addGenre(Genre.from(genreDTO));
-    return GenreDTO.from(genre);
+    return GenreDto.from(genre);
   }
 
   @DeleteMapping("delete_genre_by_id/{id}")
-  public void deleteGenreById(@RequestParam("id") int id) {
-    genreService.deleteGenreById(id);
+  public void deleteGenreById(@RequestParam("id") int genreId) {
+    genreService.deleteGenreById(genreId);
   }
 
 }

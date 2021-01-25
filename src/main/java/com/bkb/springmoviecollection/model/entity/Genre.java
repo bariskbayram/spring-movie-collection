@@ -1,6 +1,6 @@
 package com.bkb.springmoviecollection.model.entity;
 
-import com.bkb.springmoviecollection.model.dto.GenreDTO;
+import com.bkb.springmoviecollection.model.dto.GenreDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,7 +8,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -37,22 +36,9 @@ public class Genre {
     this.genreName = genreName;
   }
 
-  public Genre(int genreId) {
-    this.genreId = genreId;
-  }
-
-  public Genre(int genreId, String genreName) {
-    this.genreId = genreId;
-    this.genreName = genreName;
-  }
-
-  public void addMovie(Movie movie) {
-    movies.add(movie);
-  }
-
-  public static Genre from(GenreDTO genreDTO) {
+  public static Genre from(GenreDto genreDTO) {
     Genre genre = new Genre();
-    genre.setGenreName(genreDTO.getName());
+    genre.setGenreName(genreDTO.getGenreName());
     return genre;
   }
 
@@ -62,22 +48,5 @@ public class Genre {
         "id=" + genreId +
         ", name='" + genreName + '\'' +
         '}';
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(genreId);
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null || getClass() != obj.getClass()) {
-      return false;
-    }
-    Genre genre = (Genre) obj;
-    return Objects.equals(genreId, genre.getGenreId());
   }
 }
