@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+  <div th:fragment="modals">
+    <div class="modal fade" id="genreModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="genreModalTitle">Add Genre</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="addGenre" method="post" th:action="@{/genres/add_genre}">
+              <div class="form-group">
+                <label for="genreName-field">Genre Name</label>
+                <input class="form-control" id="genreName-field" type="text"
+                       placeholder="Genre Name" name="genreName" maxlength="255" required/>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" form="addGenre">New Genre</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="languageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="languageModalTitle">Add Language</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="addLanguage" method="post" th:action="@{/languages/add_language}">
+              <div class="form-group">
+                <label for="languageName-field">Language Name</label>
+                <input class="form-control" id="languageName-field" type="text"
+                       placeholder="Language Name" name="languageName" maxlength="255" required/>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" form="addLanguage">New Language</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="performerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Add Actor/Actress</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="addPerformer" method="post" th:action="@{/performers/add_performer}">
+              <div class="form-group">
+                <label for="name-field">Actor/Actress Name</label>
+                <input class="form-control" id="name-field" type="text"
+                       placeholder="Actor/Actress Name" name="fullname" maxlength="255" required/>
+                <h1 th:text="${fullname}"></h1>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" form="addPerformer">New Actor/Actress</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

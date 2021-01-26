@@ -3,12 +3,13 @@ package com.bkb.springmoviecollection.controller;
 import com.bkb.springmoviecollection.model.dto.LanguageDto;
 import com.bkb.springmoviecollection.model.entity.Language;
 import com.bkb.springmoviecollection.service.LanguageService;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+@Controller
 @RequestMapping("/languages")
 public class LanguageController {
 
@@ -41,9 +42,9 @@ public class LanguageController {
   }
 
   @PostMapping("add_language")
-  public LanguageDto addLanguage(@RequestBody LanguageDto languageDTO) {
-    Language language = languageService.addLanguage(Language.from(languageDTO));
-    return LanguageDto.from(language);
+  public String addLanguage(@ModelAttribute LanguageDto languageDTO) {
+    languageService.addLanguage(Language.from(languageDTO));
+    return "redirect:/movies/display_add_movie";
   }
 
   @DeleteMapping("delete_language_by_id/{id}")

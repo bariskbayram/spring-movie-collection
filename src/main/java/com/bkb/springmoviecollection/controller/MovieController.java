@@ -1,5 +1,7 @@
 package com.bkb.springmoviecollection.controller;
 
+import com.bkb.springmoviecollection.model.dto.GenreDto;
+import com.bkb.springmoviecollection.model.dto.LanguageDto;
 import com.bkb.springmoviecollection.model.dto.MovieDto;
 import com.bkb.springmoviecollection.model.entity.Genre;
 import com.bkb.springmoviecollection.model.entity.Language;
@@ -10,12 +12,15 @@ import com.bkb.springmoviecollection.service.GenreService;
 import com.bkb.springmoviecollection.service.LanguageService;
 import com.bkb.springmoviecollection.service.MovieService;
 import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+@Controller
 @RequestMapping("/movies")
 public class MovieController {
 
@@ -33,11 +38,12 @@ public class MovieController {
   }
 
   @GetMapping("get_all_movies")
-  public List<MovieDto> getAllMovies(MoviePage moviePage) {
+  public String getAllMovies(@ModelAttribute MoviePage moviePage, Model model) {
     Page<Movie> movies = movieService.getAllMovies(moviePage);
     List<MovieDto> movieDtos = movies.stream().map(MovieDto::from)
         .collect(Collectors.toList());
-    return movieDtos;
+    model.addAttribute("movieList", movieDtos);
+    return "movie/movieList";
   }
 
   @GetMapping("get_by_id/{id}")
@@ -47,31 +53,44 @@ public class MovieController {
   }
 
   @GetMapping("get_movies_search_by")
-  public List<MovieDto> getMoviesSearchTitle(
-      MovieSpecification movieSpecification, MoviePage moviePage) {
+  public String getMoviesSearchTitle(
+      MovieSpecification movieSpecification, @ModelAttribute MoviePage moviePage, Model model) {
 
     Page<Movie> movies = movieService.searchBy(movieSpecification, moviePage);
     List<MovieDto> movieDtos = movies.stream().map(MovieDto::from)
         .collect(Collectors.toList());
-    return movieDtos;
+
+    model.addAttribute("movieList", movieDtos);
+    return "movie/movieList";
+  }
+
+  @GetMapping("display_add_movie")
+  public String getAddMoviePage(Model model) {
+    List<Genre> genres = genreService.getAllGenres();
+    List<GenreDto> genreDtos = genres.stream().map(GenreDto::from)
+        .collect(Collectors.toList());
+    List<Language> languages = languageService.getAllLanguages();
+    List<LanguageDto> languageDtos = languages.stream().map(LanguageDto::from)
+        .collect(Collectors.toList());
+    model.addAttribute("genreList", genreDtos);
+    model.addAttribute("languageList", languageDtos);
+    model.addAttribute("movieDTO", new MovieDto());
+    return "movie/addMovie";
   }
 
   @PostMapping("add_movie")
-  public MovieDto addMovie(@RequestBody MovieDto movieDTO) {
-    List<Genre> genres = movieDTO.getGenres().stream()
-        .map(genreDTO -> genreService.getGenreById(genreDTO.getGenreId()))
+  public String addMovie(@ModelAttribute MovieDto movieDTO) {
+    List<Genre> genres = movieDTO.getSelectedGenreIdList().stream()
+        .map(genreId -> genreService.getGenreById(genreId))
         .collect(Collectors.toList());
 
-    List<Language> languages = movieDTO.getLanguages().stream()
-        .map(languageDTO -> languageService.getLanguageById(languageDTO.getLanguageId()))
+    List<Language> languages = movieDTO.getSelectedLanguageIdList().stream()
+        .map(languageId -> languageService.getLanguageById(languageId))
         .collect(Collectors.toList());
 
-    Movie movie = movieService.addMovie(
-        Movie.from(movieDTO),
-        genres,
-        languages);
+    movieService.addMovie(Movie.from(movieDTO), genres, languages);
 
-    return MovieDto.from(movie);
+    return "redirect:/movies/get_all_movies";
   }
 
 }

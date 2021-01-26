@@ -1,12 +1,12 @@
 package com.bkb.springmoviecollection.model.search;
 
 import com.bkb.springmoviecollection.model.entity.Movie;
-import com.bkb.springmoviecollection.model.entity.Performer;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+import java.util.Locale;
 
 @Getter
 @Setter
@@ -14,7 +14,6 @@ public class MovieSpecification implements Specification<Movie> {
 
   private String key;
   private String value;
-  private boolean isPerformer = false;
 
   public MovieSpecification(String key, String value) {
     this.key = key;
@@ -26,11 +25,16 @@ public class MovieSpecification implements Specification<Movie> {
                                CriteriaQuery<?> criteriaQuery,
                                CriteriaBuilder criteriaBuilder) {
 
-    if(isPerformer) {
-      Join<Object, Object> h = root.join("performer");
-      return criteriaBuilder.like(h.get(key), "%bkb%");
+    if(key.equals("fullname")) {
+      Join<Object, Object> p = root.join("performersAssoc").join("performer");
+      return criteriaBuilder.like(
+          criteriaBuilder.lower(p.get(key)), "%" + value.toLowerCase(Locale.ROOT) + "%");
+    }else if(key.equals("genreName")) {
+      Join<Object, Object> g = root.join("genres");
+      return criteriaBuilder.like(
+          criteriaBuilder.lower(g.get(key)), "%" + value.toLowerCase(Locale.ROOT) + "%");
     }
     return criteriaBuilder.like(
-        root.get(key), "%" + value + "%");
+        criteriaBuilder.lower(root.get(key)), "%" + value.toLowerCase(Locale.ROOT) + "%");
   }
 }

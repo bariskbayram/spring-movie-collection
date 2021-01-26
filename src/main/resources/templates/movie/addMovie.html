@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="fragments :: head"></head>
+<body>
+  <nav th:replace="fragments :: navigation"></nav>
+  <h1>Add Movie</h1>
+
+  <div class="container">
+    <form id="addMovie" th:object="${movieDTO}" method="post" th:action="@{/movies/add_movie}" style="max-width: 600px">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="title-field">Title</label>
+            <input class="form-control" id="title-field" type="text"
+                   placeholder="Movie Title" name="title" maxlength="255" required/>
+          </div>
+          <div class="form-group">
+            <label for="year-field">Year</label>
+            <input class="form-control" id="year-field" type="number"
+                   placeholder="2003" name="releaseYear"
+                   maxlength="4" minlength="4" required/>
+          </div>
+          <div class="form-group">
+            <label for="desc-field">Description</label>
+            <input class="form-control" id="desc-field" type="text"
+                   placeholder="Movie Description" name="description"
+                   maxlength="255" required/>
+          </div>
+          <!--<div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Media</span>
+            </div>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" id="media-field" name="mediaPath" required>
+              <label class="custom-file-label" for="media-field">Choose media</label>
+            </div>
+          </div>-->
+          <div class="form-group">
+            <label for="media-field">MediaPath</label>
+            <input class="form-control" id="media-field" type="text"
+                   placeholder="Media Path" name="mediaPath"
+                   maxlength="255" required/>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="dropdown">
+            <input type="text" id="dropGenre" class="list" value="Choose Genre" readonly>
+            <div id="contentGenre" class="content">
+               <div class="list" th:each="genre : ${genreList}">
+                 <input type="checkbox" th:field="*{selectedGenreIdList}" th:value="${genre.genreId}" class="list" />
+                 <label th:for="${genre.genreId}" class="list" th:text="${genre.genreName}">Genre</label>
+               </div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#genreModal">
+            New Genre
+          </button>
+          <div class="dropdown">
+            <input type="text" id="dropLanguage" class="list" value="Choose Language" readonly>
+            <div id="contentLanguage" class="content">
+              <div class="list" th:each="lang : ${languageList}">
+                <input type="checkbox" th:field="*{selectedLanguageIdList}" th:value="${lang.languageId}" class="list" />
+                <label th:for="${lang.languageId}" class="list" th:text="${lang.languageName}">Language</label>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#languageModal">
+              New Language
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" form="addMovie">New Movie</button>
+      </div>
+    </form>
+
+    <div th:replace="modals :: modals"></div>
+
+  </div>
+
+  <script>
+    var genre = document.getElementById('dropGenre');
+    var language = document.getElementById('dropLanguage');
+    var contentGenre = document.getElementById('contentGenre');
+    var contentLanguage = document.getElementById('contentLanguage');
+    var listGenre = document.querySelectorAll('#contentGenre input[type="checkbox"]');
+    var labelGenre = document.querySelectorAll('#contentGenre label')
+    var listLanguage = document.querySelectorAll('#contentLanguage input[type="checkbox"]');
+    var labelLanguage = document.querySelectorAll('#contentLanguage label')
+
+    genre.addEventListener('click', function() {
+      contentGenre.classList.toggle('show')
+    })
+
+    language.addEventListener('click', function() {
+      contentLanguage.classList.toggle('show')
+    })
+
+    window.onclick = function(e) {
+      if (!e.target.matches('.list')) {
+        if (contentGenre.classList.contains('show')) {
+          contentGenre.classList.remove('show')
+        } else if (contentLanguage.classList.contains('show')) {
+          contentLanguage.classList.remove('show')
+        }
+      }
+    }
+
+    listGenre.forEach(function(item) {
+      item.addEventListener('click', function () {
+        calc(listGenre, labelGenre, genre)
+      })
+    })
+
+    listLanguage.forEach(function(item) {
+      item.addEventListener('click', function () {
+        calc(listLanguage, labelLanguage, language)
+      })
+    })
+
+    function calc(list, label, drop) {
+      for (var i = 0, arr = []; i < list.length; i++) {
+        if (list[i].checked) {
+          arr.push(label[i].textContent)
+        }
+      }
+      drop.value = arr.join(', ')
+    }
+  </script></body>
+</html>

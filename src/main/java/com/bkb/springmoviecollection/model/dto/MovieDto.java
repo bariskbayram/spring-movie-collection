@@ -14,6 +14,8 @@ public class MovieDto {
   private int releaseYear;
   private String description;
   private String mediaPath;
+  private List<Integer> selectedGenreIdList;
+  private List<Integer> selectedLanguageIdList;
   private List<GenreDto> genres = new ArrayList<>();
   private List<LanguageDto> languages = new ArrayList<>();
 

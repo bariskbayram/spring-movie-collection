@@ -3,12 +3,13 @@ package com.bkb.springmoviecollection.controller;
 import com.bkb.springmoviecollection.model.dto.GenreDto;
 import com.bkb.springmoviecollection.model.entity.Genre;
 import com.bkb.springmoviecollection.service.GenreService;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+@Controller
 @RequestMapping("/genres")
 public class GenreController {
 
@@ -41,9 +42,9 @@ public class GenreController {
   }
 
   @PostMapping("add_genre")
-  public GenreDto addGenre(@RequestBody GenreDto genreDTO) {
-    Genre genre = genreService.addGenre(Genre.from(genreDTO));
-    return GenreDto.from(genre);
+  public String addGenre(@ModelAttribute GenreDto genreDTO) {
+    genreService.addGenre(Genre.from(genreDTO));
+    return "redirect:/movies/display_add_movie";
   }
 
   @DeleteMapping("delete_genre_by_id/{id}")

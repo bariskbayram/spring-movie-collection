@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:fragment="head">
+  <meta charset="UTF-8">
+  <title th:text="${title}">MovieCollection</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link href="../static/css/main.css" th:href="@{/css/main.css}" rel="stylesheet"/>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navigation">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">Disabled</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="dropdown" th:fragment="dropdown-list-input">
+  <input type="text" id="droptxt" class="list" readonly>
+  <div id="content" class="content">
+    <div class="list" th:each="item : ${items}">
+      <input type="checkbox" id="apple" class="list" value="Apple" />
+      <label for="apple" class="list">Apple </label>
+      <input type="hidden" class="list quantity" min="1" value="1" />
+    </div>
+    <div class="list">
+      <input type="checkbox" id="banana" class="list" value="Banana" />
+      <label for="banana" class="list">Banana </label>
+      <input type="hidden" class="list quantity" min="1" value="1" />
+    </div>
+    <div class="list">
+      <input type="checkbox" id="pineapple" class="list" value="Pineapple" />
+      <label for="pineapple" class="list">Pineapple </label>
+      <input type="hidden" class="list quantity" min="1" value="1" />
+    </div>
+  </div>
+</div>
+
+<script th:fragment="dropdown-list-input-js">
+  var txt = document.getElementById( 'droptxt' );
+  var content = document.getElementById( 'content' );
+  var list = document.querySelectorAll( '.content input[type="checkbox"]' );
+  var quantity = document.querySelectorAll( '.quantity' );
+
+  txt.addEventListener( 'click', function() {
+    content.classList.toggle( 'show' )
+  } )
+
+  window.onclick = function( e ) {
+    if ( !e.target.matches( '.list' ) ) {
+      if ( content.classList.contains( 'show' ) ) content.classList.remove( 'show' )
+    }
+  }
+
+  list.forEach( function( item, index ) {
+    item.addEventListener( 'click', function() {
+      quantity[ index ].type = ( item.checked ) ? 'number' : 'hidden';
+      calc()
+    } )
+  } )
+
+  quantity.forEach( function( item ) {
+    item.addEventListener( 'input', calc )
+  } )
+
+  function calc() {
+    for ( var i = 0, arr = []; i < list.length; i++ ) {
+      if ( list[ i ].checked ) arr.push( quantity[ i ].value + ' x ' + list[ i ].value )
+    }
+
+    txt.value = arr.join( ', ' )
+  }
+</script>
+
+</body>
+</html>

@@ -9,7 +9,7 @@ import org.springframework.data.domain.Sort;
 public class MoviePage {
 
   private int pageNumber = 0;
-  private int pageSize = 10;
+  private int pageSize = 5;
   private Sort.Direction direction =
       Sort.Direction.ASC;
   private String sortBy = "releaseYear";
