@@ -4,46 +4,62 @@
 <body>
   <nav th:replace="fragments :: navigation"></nav>
 
-  <div class="flex-column">
+  <div class="flex-column movie-search">
     <form class="form-inline my-2 my-lg-0 m-0" method="get" th:action="@{/movies/get_movies_search_by}">
-      <div class="input-group m-3">
-        <div class="input-group-prepend">
-          <label class="input-group-text" for="searchBy">SearchBy</label>
+      <div class="search-div">
+        <div class="input-group m-3">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="searchBy">SearchBy</label>
+          </div>
+          <select class="custom-select" id="searchBy" name="key">
+            <option value="title" selected>Movie Title</option>
+            <option value="fullname">Actor/Actress Name</option>
+            <option value="genreName">Genre</option>
+          </select>
         </div>
-        <select class="custom-select" id="searchBy" name="key">
-          <option value="title" selected>Movie Title</option>
-          <option value="fullname">Actor/Actress Name</option>
-          <option value="genreName">Genre</option>
-        </select>
-      </div>
-      <div class="input-group m-3">
-        <div class="input-group-prepend">
-          <label class="input-group-text" for="direction">OrderBy</label>
+        <div class="input-group m-3">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="direction">OrderBy</label>
+          </div>
+          <select class="custom-select" id="direction" name="direction">
+            <option value="ASC" selected>Year ASC</option>
+            <option value="DESC">Year DSC</option>
+          </select>
         </div>
-        <select class="custom-select" id="direction" name="direction">
-          <option value="ASC" selected>Year ASC</option>
-          <option value="DESC">Year DSC</option>
-        </select>
+        <input class="form-control mr-sm-2 mb-3 mt-3" type="search" placeholder="Search" aria-label="Search" name="value">
+        <button class="btn btn-outline-success my-2 my-sm-0 mb-3 mt-3 btn-search-x" type="submit">Search</button>
       </div>
-      <input class="form-control mr-sm-2 mb-3 mt-3" type="search" placeholder="Search" aria-label="Search" name="value">
-      <button class="btn btn-outline-success my-2 my-sm-0 mb-3 mt-3" type="submit">Search</button>
     </form>
-    <a class="btn btn-primary" th:href="@{/movies/display_add_movie}" role="button">New Movies</a>
+    <a class="btn btn-primary" th:href="@{/movies/display_add_movie}" role="button">New Movie</a>
   </div>
 
   <div class="container">
-    <table class="table">
+    <table class="table table-striped">
       <tr>
-        <th>Title</th>
-        <th>Year</th>
-        <th>Description</th>
-        <th>MediaPath</th>
+        <th scope="col">Media</th>
+        <th scope="col">Title</th>
+        <th scope="col">Year</th>
+        <th scope="col">Description</th>
+        <th scope="col">Actions</th>
       </tr>
       <tr th:each="movie : ${movieList}">
-        <td th:text="${movie.title}"></td>
+        <td>
+          <div class="movieMedia">
+          <img th:src="@{${movie.PhotosImagePath}}" class="img-thumbnail" style="max-width: 60%"/>
+          </div>
+        </td>
+        <td class="movieTitle"><a th:href="@{/movies/get_by_id/(id=${movie.movieId})}" th:text="${movie.title}"></a></td>
         <td th:text="${movie.releaseYear}"></td>
-        <td th:text="${movie.description}"></td>
-        <td th:text="${movie.mediaPath}"></td>
+        <td class="desc" th:text="${movie.description}"></td>
+        <td>
+          <div class="actions">
+            <a th:href="@{/movies/display_edit_by_id/(id=${movie.movieId})}"
+               class="btn btn-warning" style="margin-bottom: 10px">Edit</a>
+            <a th:href="@{/movies/delete_by_id/(id=${movie.movieId})}"
+               class="btn btn-danger">Delete</a>
+          </div>
+        </td>
+
       </tr>
     </table>
   </div>

@@ -6,14 +6,14 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <link href="../static/css/main.css" th:href="@{/css/main.css}" rel="stylesheet"/>
 
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navigation">
-  <a class="navbar-brand" href="#">Navbar</a>
+  <a class="navbar-brand" href="#">Home</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -21,14 +21,17 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" th:href="@{/movies/get_all_movies}">Movies <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link" th:href="@{/performers/get_all_performers}">Performers </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/genres/get_all_genres}">Genres </a>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
+          Settings
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="#">Action</a>
@@ -37,67 +40,157 @@
           <a class="dropdown-item" href="#">Something else here</a>
         </div>
       </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
-      </li>
     </ul>
   </div>
 </nav>
 
-<div class="dropdown" th:fragment="dropdown-list-input">
-  <input type="text" id="droptxt" class="list" readonly>
-  <div id="content" class="content">
-    <div class="list" th:each="item : ${items}">
-      <input type="checkbox" id="apple" class="list" value="Apple" />
-      <label for="apple" class="list">Apple </label>
-      <input type="hidden" class="list quantity" min="1" value="1" />
-    </div>
-    <div class="list">
-      <input type="checkbox" id="banana" class="list" value="Banana" />
-      <label for="banana" class="list">Banana </label>
-      <input type="hidden" class="list quantity" min="1" value="1" />
-    </div>
-    <div class="list">
-      <input type="checkbox" id="pineapple" class="list" value="Pineapple" />
-      <label for="pineapple" class="list">Pineapple </label>
-      <input type="hidden" class="list quantity" min="1" value="1" />
+<div th:fragment="addModal(title, url, modalId, field)" class="modal fade" th:id="${modalId}" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" th:id="${field} + 'h5' + ${modalId}" th:text="${title}">New Genre</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form th:id="${field} + 'form' + ${modalId}" method="post" th:action="@{__${url}__}">
+          <div class="form-group">
+            <label th:for="${field}">Name</label>
+            <input class="form-control" th:id="${field} + 'input' + ${modalId}" type="text"
+                   placeholder="Name" th:value="${value}" th:name="${field}" maxlength="255" required/>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" th:form="${field} + form + ${modalId}" th:text="${title}">New Genre</button>
+      </div>
     </div>
   </div>
 </div>
 
-<script th:fragment="dropdown-list-input-js">
-  var txt = document.getElementById( 'droptxt' );
-  var content = document.getElementById( 'content' );
-  var list = document.querySelectorAll( '.content input[type="checkbox"]' );
-  var quantity = document.querySelectorAll( '.quantity' );
+<div th:fragment="editGenreModal" class="modal fade" th:id="${modalId}" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" th:text="${title}">New Genre</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form th:id="${field} + 'form'" method="post" th:action="@{__${url}__}">
+          <div class="form-group">
+            <label th:for="${field} + 'for'">Name</label>
+            <input class="form-control" th:id="${field} + 'for'" type="text"
+                   placeholder="Name" th:value="${genre.genreName}" th:name="${field}" maxlength="255" required/>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" th:form="${field} + 'form'" th:text="${title}">New Genre</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-  txt.addEventListener( 'click', function() {
-    content.classList.toggle( 'show' )
-  } )
+<div th:fragment="editPerformerModal" class="modal fade" th:id="${modalId}" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" th:text="${title}">New Genre</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form th:id="${field} + 'form'" method="post" th:action="@{__${url}__}">
+          <div class="form-group">
+            <label th:for="${field} + 'for'">Name</label>
+            <input class="form-control" th:id="${field} + 'for'" type="text"
+                   placeholder="Name" th:value="${performer.fullname}" th:name="${field}" maxlength="255" required/>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" th:form="${field} + 'form'" th:text="${title}">New Genre</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-  window.onclick = function( e ) {
-    if ( !e.target.matches( '.list' ) ) {
-      if ( content.classList.contains( 'show' ) ) content.classList.remove( 'show' )
+<script th:fragment="dropdown-script">
+  var genre = document.getElementById('dropGenre');
+  var language = document.getElementById('dropLanguage');
+  var performer = document.getElementById('dropPerformer');
+  var contentGenre = document.getElementById('contentGenre');
+  var contentLanguage = document.getElementById('contentLanguage');
+  var contentPerformer = document.getElementById('contentPerformer');
+  var listGenre = document.querySelectorAll('#contentGenre input[type="checkbox"]');
+  var listLanguage = document.querySelectorAll('#contentLanguage input[type="checkbox"]');
+  var listPerformer = document.querySelectorAll('#contentPerformer input[type="checkbox"]');
+  var labelGenre = document.querySelectorAll('#contentGenre label')
+  var labelLanguage = document.querySelectorAll('#contentLanguage label')
+  var labelPerformer = document.querySelectorAll('#contentPerformer label')
+  var roles = document.querySelectorAll('.role')
+
+  genre.addEventListener('click', function() {
+    contentGenre.classList.toggle('show')
+  })
+
+  language.addEventListener('click', function() {
+    contentLanguage.classList.toggle('show')
+  })
+
+  performer.addEventListener('click', function() {
+    contentPerformer.classList.toggle('show')
+  })
+
+  window.onclick = function(e) {
+    if (!e.target.matches('.list')) {
+      if (contentGenre.classList.contains('show')) {
+        contentGenre.classList.remove('show')
+      } if (contentLanguage.classList.contains('show')) {
+        contentLanguage.classList.remove('show')
+      } if (contentPerformer.classList.contains('show')) {
+        contentPerformer.classList.remove('show')
+      }
     }
   }
 
-  list.forEach( function( item, index ) {
-    item.addEventListener( 'click', function() {
-      quantity[ index ].type = ( item.checked ) ? 'number' : 'hidden';
-      calc()
-    } )
-  } )
+  listGenre.forEach(function(item) {
+    item.addEventListener('click', function () {
+      calc(listGenre, labelGenre, genre)
+    })
+  })
 
-  quantity.forEach( function( item ) {
-    item.addEventListener( 'input', calc )
-  } )
+  listLanguage.forEach(function(item) {
+    item.addEventListener('click', function () {
+      calc(listLanguage, labelLanguage, language)
+    })
+  })
 
-  function calc() {
-    for ( var i = 0, arr = []; i < list.length; i++ ) {
-      if ( list[ i ].checked ) arr.push( quantity[ i ].value + ' x ' + list[ i ].value )
+  listPerformer.forEach(function(item, index) {
+    item.addEventListener('click', function () {
+      roles[index].type = ( item.checked ) ? 'text' : 'hidden';
+      roles[index].value = "";
+      calc(listPerformer, labelPerformer, performer)
+    })
+  })
+
+  function calc(list, label, drop) {
+    for (var i = 0, arr = []; i < list.length; i++) {
+      if (list[i].checked) {
+        arr.push(label[i].textContent)
+      }
     }
-
-    txt.value = arr.join( ', ' )
+    drop.value = arr.join(', ')
   }
 </script>
 

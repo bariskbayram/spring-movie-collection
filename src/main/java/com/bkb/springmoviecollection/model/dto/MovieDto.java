@@ -2,6 +2,7 @@ package com.bkb.springmoviecollection.model.dto;
 
 import com.bkb.springmoviecollection.model.entity.Movie;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,12 +15,23 @@ public class MovieDto {
   private int releaseYear;
   private String description;
   private String mediaPath;
-  private List<Integer> selectedGenreIdList;
-  private List<Integer> selectedLanguageIdList;
-  private List<GenreDto> genres = new ArrayList<>();
-  private List<LanguageDto> languages = new ArrayList<>();
+  private MultipartFile multipartFile;
+  private List<Integer> selectedGenreIdList = new ArrayList<>();
+  private List<Integer> selectedLanguageIdList = new ArrayList<>();
+  private List<PerformerDto> selectedPerformerDtoList = new ArrayList<>();
 
   public MovieDto() {
+  }
+
+  public void addPerformerDto(int id, String role) {
+    selectedPerformerDtoList.add(new PerformerDto(id, role));
+  }
+
+  public String getPhotosImagePath() {
+    if(mediaPath == null || movieId == 0 ) {
+      return null;
+    }
+    return "/movie-photos/" + movieId + "/" + mediaPath;
   }
 
   public static MovieDto from(Movie movie) {

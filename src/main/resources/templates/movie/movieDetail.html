@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="fragments :: head"></head>
+<body>
+  <nav th:replace="fragments :: navigation"></nav>
+
+  <div class="container flex-row">
+    <img th:src="@{${movie.PhotosImagePath}}" class="img-thumbnail" style="margin-top: 20px;"/>
+    <div>
+      <h1 th:text="${movie.title} + ' - ' + ${movie.releaseYear}">Title - 2010</h1>
+      <p th:text="${movie.description}">Description</p>
+      <div>
+        <div class="flex-row">
+          <div>
+            <span><b>Genres: </b></span>
+            <a  th:each="genre: ${genres}" th:href="@{'/movies/get_movies_search_by?key=genreName&direction=ASC&value=' + '__${genre.genreName}__'}"
+                 th:text="${genre.genreName}">Sci-Fi</a>
+          </div>
+          <div>
+            <span><b>Languages: </b></span>
+            <span th:each="lang: ${languages}" th:text="${lang.languageName} + ' '">English</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="list-group" th:each="performer: ${performers}">
+      <a class="list-group-item list-group-item-action active"
+         th:href="@{'/movies/get_movies_search_by?key=fullname&direction=ASC&value=' + '__${performer.fullname}__'}"
+         th:text="${performer.fullname}">Leonardo DiCaprio</a>
+      </a>
+    </div>
+
+  </div>
+
+</body>
+</html>

@@ -1,14 +1,17 @@
 package com.bkb.springmoviecollection.controller;
 
+import com.bkb.springmoviecollection.model.dto.GenreDto;
 import com.bkb.springmoviecollection.model.dto.PerformerDto;
 import com.bkb.springmoviecollection.model.entity.Performer;
 import com.bkb.springmoviecollection.service.PerformerService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+@Controller
 @RequestMapping("/performers")
 public class PerformerController {
 
@@ -19,11 +22,12 @@ public class PerformerController {
   }
 
   @GetMapping("get_all_performers")
-  public List<PerformerDto> getAllPerformers() {
+  public String getAllPerformers(Model model) {
     List<Performer> performers = performerService.getAllPerformers();
     List<PerformerDto> performerDTOS =
         performers.stream().map(PerformerDto::from).collect(Collectors.toList());
-    return performerDTOS;
+    model.addAttribute("performerList", performerDTOS);
+    return "performer/performerList";
   }
 
   @GetMapping("get_by_id/{id}")
@@ -33,14 +37,41 @@ public class PerformerController {
   }
 
   @PostMapping("add_performer")
-  public PerformerDto addPerformer(@RequestBody PerformerDto performerDTO) {
-    Performer performer = performerService.addPerformer(Performer.from(performerDTO));
-    return PerformerDto.from(performer);
+  public String addPerformer(PerformerDto performerDTO) {
+    performerService.addPerformer(Performer.from(performerDTO));
+    return "redirect:/movies/display_add_movie";
   }
 
-  @DeleteMapping("delete_performer_by_id/{id}")
-  public void deletePerformerById(@RequestParam("id") int performerId) {
+  @PostMapping("add_performer_from_list")
+  public String addPerformerFromList(PerformerDto performerDTO) {
+    performerService.addPerformer(Performer.from(performerDTO));
+    return "redirect:/performers/get_all_performers";
+  }
+
+  @RequestMapping(value = "delete_performer_by_id/", params = "id")
+  public String deletePerformerById(@RequestParam("id") int performerId) {
     performerService.deletePerformerById(performerId);
+    return "redirect:/performers/get_all_performers";
+  }
+
+  @RequestMapping(value = "update_performer_modal", params = {"id", "name"})
+  public String updateGenreModal(@RequestParam("id") int performerId,
+                                 @RequestParam("name") String fullname,
+                                 Model model) {
+
+    model.addAttribute("title", "Edit Performer");
+    model.addAttribute("url", String.format("/performers/update_performer_by_id/?id=%s", new Object[]{performerId}));
+    model.addAttribute("modalId", "editPerformerModal");
+    model.addAttribute("field", "fullname");
+    model.addAttribute("performer", new PerformerDto(fullname, performerId));
+    return "fragments :: editPerformerModal";
+  }
+
+  @RequestMapping(value = "update_performer_by_id/", params = {"id", "fullname"})
+  public String updateGenreById(@RequestParam("id") int performerId,
+                                @RequestParam("fullname") String fullname) {
+    performerService.updatePerformerById(performerId, fullname);
+    return "redirect:/performers/get_all_performers";
   }
 
 }

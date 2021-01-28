@@ -7,9 +7,20 @@ import lombok.Data;
 public class PerformerDto {
 
   private int performerId;
-  private String fullname;
+  private String fullname = "";
+  private String performerRole = "";
 
   public PerformerDto() {
+  }
+
+  public PerformerDto(int performerId, String performerRole) {
+    this.performerId = performerId;
+    this.performerRole = performerRole;
+  }
+
+  public PerformerDto(String fullname, int performerId) {
+    this.performerId = performerId;
+    this.fullname = fullname;
   }
 
   public static PerformerDto from(Performer performer) {

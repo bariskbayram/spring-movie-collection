@@ -1,8 +1,6 @@
 package com.bkb.springmoviecollection.service;
 
-import com.bkb.springmoviecollection.model.entity.Genre;
-import com.bkb.springmoviecollection.model.entity.Language;
-import com.bkb.springmoviecollection.model.entity.Movie;
+import com.bkb.springmoviecollection.model.entity.*;
 import com.bkb.springmoviecollection.model.exception.TNotFoundException;
 import com.bkb.springmoviecollection.model.search.MoviePage;
 import com.bkb.springmoviecollection.model.search.MovieSpecification;
@@ -54,5 +52,9 @@ public class MovieService {
     Pageable pageable = PageRequest.of(moviePage.getPageNumber(),
         moviePage.getPageSize(), sort);
     return movieRepository.findAll(movieSpecification, pageable);
+  }
+
+  public void deleteMovieById(int movieId) {
+    movieRepository.deleteById(movieId);
   }
 }

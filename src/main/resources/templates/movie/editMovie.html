@@ -3,7 +3,7 @@
 <head th:replace="fragments :: head"></head>
 <body>
   <nav th:replace="fragments :: navigation"></nav>
-  <h1>Add Movie</h1>
+  <h1>Edit Movie</h1>
 
   <div class="container">
     <form id="addMovie" th:object="${movieDto}" method="post" th:action="@{/movies/add_movie}" enctype="multipart/form-data">
@@ -35,6 +35,22 @@
             <img id="thumbnail" alt="MediaPreview" />
           </div>
         </div>
+        <div>
+          <ul th:each="genre: ${genres}">
+            <li th:text="${genre.genreName}">Sci-Fi</li>
+          </ul>
+
+          <ul th:each="lang: ${languages}">
+            <li th:text="${lang.languageName}">English</li>
+          </ul>
+
+          <div class="list-group" th:each="performer: ${performers}">
+            <a th:href="@{/performers/get_performer_by_id/(id=${performer.performerId})}"
+               class="list-group-item list-group-item-action active" th:text="${performer.fullname}">
+              Leonardo DiCaprio
+            </a>
+          </div>
+        </div>
         <div class="col-md-6">
           <div class="dropdown col-md-4">
             <input type="text" id="dropGenre" class="list" value="Choose Genre" readonly>
@@ -44,7 +60,7 @@
                  <label th:for="${#ids.prev('selectedGenreIdList')}" class="list" th:text="${genre.genreName}">Genre</label>
                </div>
             </div>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addGenreModal">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#genreModal">
               New Genre
             </button>
           </div>
@@ -56,7 +72,7 @@
                 <label th:for="${#ids.prev('selectedLanguageIdList')}" class="list" th:text="${lang.languageName}">Language</label>
               </div>
             </div>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addLanguageModal">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#languageModal">
               New Language
             </button>
           </div>
@@ -64,14 +80,16 @@
             <input type="text" id="dropPerformer" class="list" value="Choose Performer" readonly>
             <div id="contentPerformer" class="content">
               <div class="list" th:each="performer,i : ${performerList}">
-                <input type="checkbox" th:name="|selectedPerformerDtoList[${i.index}].performerId|"
+                <input type="checkbox" th:field="*{selectedPerformerDtoList[__${i.index}__]}"
                        th:value="${performer.performerId}" class="list" />
                 <label  class="list" th:text="${performer.fullname}">Performer</label>
-                <input type="text" th:field="*{selectedPerformerDtoList[__${i.index}__].performerRole}"
+                <input type="text" th:value="*{{selectedPerformerDtoList[__${i.index}__]}}"
+                       th:attr="name='selectedPerformerDtoList[' + __${i.index}__ + ']', id='selectedPerformerDtoList' + '__${i.index}__1'"
                        placeholder="Role" class="list role"/>
+<!--                <label th:for="${#ids.prev('selectedPerformerDtoList')}" class="list">Role</label>-->
               </div>
             </div>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addPerformerModal">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#performerModal">
               New Performer
             </button>
           </div>
@@ -80,11 +98,7 @@
       </div>
     </form>
 
-
-    <div th:replace="fragments :: addModal('New Actor/Actress', '/performers/add_performer', 'addPerformerModal', 'fullname')"></div>
-    <div th:replace="fragments :: addModal('New Genre', '/genres/add_genre', 'addGenreModal', 'genreName')"></div>
-    <div th:replace="fragments :: addModal('New Language', '/languages/add_language', 'addLanguageModal', 'languageName')"></div>
-
+    <div th:replace="modals :: modals"></div>
 
   </div>
 

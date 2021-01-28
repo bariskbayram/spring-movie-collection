@@ -16,6 +16,11 @@ public class GenreDto {
     this.genreId = genreId;
   }
 
+  public GenreDto(int genreId, String genreName) {
+    this.genreId = genreId;
+    this.genreName = genreName;
+  }
+
   public static GenreDto from(Genre genre) {
     GenreDto genreDTO = new GenreDto();
     genreDTO.setGenreId(genre.getGenreId());

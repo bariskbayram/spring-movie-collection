@@ -4,6 +4,7 @@ import com.bkb.springmoviecollection.model.dto.GenreDto;
 import com.bkb.springmoviecollection.model.entity.Genre;
 import com.bkb.springmoviecollection.service.GenreService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,11 +21,12 @@ public class GenreController {
   }
 
   @GetMapping("get_all_genres")
-  public List<GenreDto> getAllGenres() {
+  public String getAllGenres(Model model) {
     List<Genre> genres = genreService.getAllGenres();
     List<GenreDto> genreDtos =
         genres.stream().map(GenreDto::from).collect(Collectors.toList());
-    return genreDtos;
+    model.addAttribute("genreList", genreDtos);
+    return "genre/genreList";
   }
 
   @GetMapping("get_by_id/{id}")
@@ -42,14 +44,41 @@ public class GenreController {
   }
 
   @PostMapping("add_genre")
-  public String addGenre(@ModelAttribute GenreDto genreDTO) {
+  public String addGenre(GenreDto genreDTO) {
     genreService.addGenre(Genre.from(genreDTO));
     return "redirect:/movies/display_add_movie";
   }
 
-  @DeleteMapping("delete_genre_by_id/{id}")
-  public void deleteGenreById(@RequestParam("id") int genreId) {
+  @PostMapping("add_genre_from_list")
+  public String addGenreFromList(GenreDto genreDTO) {
+    genreService.addGenre(Genre.from(genreDTO));
+    return "redirect:/genres/get_all_genres";
+  }
+
+  @RequestMapping(value = "delete_genre_by_id/", params = "id")
+  public String deleteGenreById(@RequestParam("id") int genreId) {
     genreService.deleteGenreById(genreId);
+    return "redirect:/genres/get_all_genres";
+  }
+
+  @RequestMapping(value = "update_genre_modal", params = {"id", "name"})
+  public String updateGenreModal(@RequestParam("id") int genreId,
+                                 @RequestParam("name") String genreName,
+                                 Model model) {
+
+    model.addAttribute("title", "Edit Genre");
+    model.addAttribute("url", String.format("/genres/update_genre_by_id/?id=%s", new Object[]{genreId}));
+    model.addAttribute("modalId", "editGenreModal");
+    model.addAttribute("field", "genreName");
+    model.addAttribute("genre", new GenreDto(genreId, genreName));
+    return "fragments :: editGenreModal";
+  }
+
+  @RequestMapping(value = "update_genre_by_id/", params = {"id", "genreName"})
+  public String updateGenreById(@RequestParam("id") int genreId,
+                                @RequestParam("genreName") String genreName) {
+    genreService.updateGenreById(genreId, genreName);
+    return "redirect:/genres/get_all_genres";
   }
 
 }

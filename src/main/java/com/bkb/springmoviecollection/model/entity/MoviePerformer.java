@@ -29,13 +29,18 @@ public class MoviePerformer {
       foreignKey = @ForeignKey(name = "movie_performer_performer_id_fk"))
   private Performer performer;
 
-  @Column(name = "performer_role", nullable = false)
+  @Column(name = "performer_role")
   private String performerRole;
 
-  @Column(name = "created_at",
+  @Column(name = "created_at", nullable = false, updatable = false,
+      insertable = false,
       columnDefinition = "TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP")
   private LocalDateTime createdAt;
 
-
-
+  public MoviePerformer(Movie movie, Performer performer, String performerRole) {
+    this.movie = movie;
+    this.performer = performer;
+    this.performerRole = performerRole;
+    this.moviePerformerId = new MoviePerformerId(movie.getMovieId(), performer.getPerformerId());
+  }
 }

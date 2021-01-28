@@ -42,7 +42,7 @@ public class LanguageController {
   }
 
   @PostMapping("add_language")
-  public String addLanguage(@ModelAttribute LanguageDto languageDTO) {
+  public String addLanguage(LanguageDto languageDTO) {
     languageService.addLanguage(Language.from(languageDTO));
     return "redirect:/movies/display_add_movie";
   }

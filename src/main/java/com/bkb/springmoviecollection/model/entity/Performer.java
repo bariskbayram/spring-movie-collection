@@ -34,6 +34,9 @@ public class Performer {
       cascade = CascadeType.ALL, orphanRemoval = true)
   private List<MoviePerformer> moviesAssoc = new ArrayList<>();
 
+  @Transient
+  private String performerRole;
+
   public Performer(String fullname) {
     this.fullname = fullname;
   }

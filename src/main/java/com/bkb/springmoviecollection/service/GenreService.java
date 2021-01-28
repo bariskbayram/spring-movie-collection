@@ -5,6 +5,7 @@ import com.bkb.springmoviecollection.model.exception.TNotFoundException;
 import com.bkb.springmoviecollection.repository.GenreRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -35,5 +36,9 @@ public class GenreService {
 
   public void deleteGenreById(int genreId) {
     genreRepository.deleteById(genreId);
+  }
+
+  public void updateGenreById(int genreId, String genreName) {
+    genreRepository.updateById(genreId, genreName);
   }
 }

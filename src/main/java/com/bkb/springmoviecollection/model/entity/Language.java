@@ -29,7 +29,7 @@ public class Language {
   @Column(name = "language_name", nullable = false)
   private String languageName;
 
-  @ManyToMany(mappedBy = "genres")
+  @ManyToMany(mappedBy = "languages", cascade = CascadeType.REMOVE)
   private List<Movie> movies = new ArrayList<>();
 
   public Language(String languageName) {

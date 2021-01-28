@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="fragments :: head"></head>
+<body>
+  <nav th:replace="fragments :: navigation"></nav>
+
+  <div class="flex-column movie-search">
+    <button type="button" class="btn btn-primary addButton" data-toggle="modal" data-target="#addGenreModal">
+      New Genre
+    </button>
+  </div>
+
+  <div class="container">
+    <table class="table">
+      <tr>
+        <th>Index</th>
+        <th>GenreName</th>
+        <th>Actions</th>
+      </tr>
+      <tr th:each="genre,i : ${genreList}">
+        <td th:text="${i.count}"></td>
+        <td><a th:href="@{'/movies/get_movies_search_by?key=genreName&direction=ASC&value=' + '__${genre.genreName}__'}"
+               th:text="${genre.genreName}"></a></td>
+        <td>
+          <div class="actions">
+            <a th:attr="onclick=|openGenreModal('${genre.genreId}', '${genre.genreName}');|"
+               class="btn btn-warning" style="margin-bottom: 10px">Edit</a>
+            <a th:href="@{/genres/delete_genre_by_id/(id=${genre.genreId})}"
+               class="btn btn-danger">Delete</a>
+          </div>
+        </td>
+
+      </tr>
+    </table>
+  </div>
+
+  <div th:replace="fragments :: addModal('New Genre', '/genres/add_genre_from_list', 'addGenreModal', 'genreName')"></div>
+  <div id="editGenreHolder"></div>
+
+<script>
+  function openGenreModal(id, name) {
+    console.log("selam1")
+    $.ajax({
+      url: "/genres/update_genre_modal/?id=" + id + "&name=" + name,
+      success: function (data) {
+        console.log("selam")
+        $("#editGenreHolder").html(data);
+        $("#editGenreModal").modal("show");
+      }
+    });
+  }
+</script>
+</body>
+</html>

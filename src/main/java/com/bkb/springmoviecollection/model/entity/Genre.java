@@ -29,7 +29,7 @@ public class Genre {
   @Column(name = "genre_name", nullable = false)
   private String genreName;
 
-  @ManyToMany(mappedBy = "genres")
+  @ManyToMany(mappedBy = "genres", cascade = CascadeType.REMOVE)
   private List<Movie> movies = new ArrayList<>();
 
   public Genre(String genreName) {

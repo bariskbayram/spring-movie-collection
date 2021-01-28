@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="fragments :: head"></head>
+<body>
+<nav th:replace="fragments :: navigation"></nav>
+
+<div class="flex-column movie-search">
+  <button type="button" class="btn btn-primary addButton" data-toggle="modal" data-target="#addPerformerModal">
+    New Actor/Actress
+  </button>
+</div>
+
+<div class="container">
+  <table class="table">
+    <tr>
+      <th>Index</th>
+      <th>Actor/Actress FullName</th>
+      <th>Actions</th>
+    </tr>
+    <tr th:each="performer,i : ${performerList}">
+      <td th:text="${i.count}"></td>
+      <td><a th:href="@{'/movies/get_movies_search_by?key=fullname&direction=ASC&value=' + '__${performer.fullname}__'}"
+             th:text="${performer.fullname}"></a></td>
+      <td>
+        <div class="actions">
+          <a th:attr="onclick=|openGenreModal('${performer.performerId}', '${performer.fullname}');|"
+             class="btn btn-warning" style="margin-bottom: 10px">Edit</a>
+          <a th:href="@{/performers/delete_performer_by_id/(id=${performer.performerId})}"
+             class="btn btn-danger">Delete</a>
+        </div>
+      </td>
+
+    </tr>
+  </table>
+</div>
+
+<div th:replace="fragments :: addModal('New Actor/Actress', '/performers/add_performer_from_list', 'addPerformerModal', 'fullname')"></div>
+<div id="editPerformerHolder"></div>
+
+<script>
+  function openGenreModal(id, name) {
+    $.ajax({
+      url: "/performers/update_performer_modal/?id=" + id + "&name=" + name,
+      success: function (data) {
+        $("#editPerformerHolder").html(data);
+        $("#editPerformerModal").modal("show");
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
