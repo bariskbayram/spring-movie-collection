@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:replace="fragments :: head"></head>
 <body>
 <nav th:replace="fragments :: navigation"></nav>
@@ -25,7 +25,7 @@
         <div class="actions">
           <a th:attr="onclick=|openGenreModal('${performer.performerId}', '${performer.fullname}');|"
              class="btn btn-warning" style="margin-bottom: 10px">Edit</a>
-          <a th:href="@{/performers/delete_performer_by_id/(id=${performer.performerId})}"
+          <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/performers/delete_performer_by_id/(id=${performer.performerId})}"
              class="btn btn-danger">Delete</a>
         </div>
       </td>

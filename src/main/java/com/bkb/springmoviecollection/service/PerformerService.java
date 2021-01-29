@@ -1,5 +1,6 @@
 package com.bkb.springmoviecollection.service;
 
+import com.bkb.springmoviecollection.model.dto.PerformerDto;
 import com.bkb.springmoviecollection.model.entity.Performer;
 import com.bkb.springmoviecollection.model.exception.TNotFoundException;
 import com.bkb.springmoviecollection.repository.PerformerRepository;
@@ -25,7 +26,7 @@ public class PerformerService {
         new TNotFoundException(performerId, Performer.class));
   }
 
-  public List<Performer> getPerformersByMovieId(int movieId) {
+  public List<PerformerDto> getPerformersByMovieId(int movieId) {
     return performerRepository.findAllByMovieId(movieId);
   }
 

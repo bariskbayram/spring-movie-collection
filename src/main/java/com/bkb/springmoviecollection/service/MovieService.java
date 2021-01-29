@@ -57,4 +57,12 @@ public class MovieService {
   public void deleteMovieById(int movieId) {
     movieRepository.deleteById(movieId);
   }
+
+  public void deleteMovieGenreAssoc(int movieId, int genreId) {
+    movieRepository.deleteMovieGenreAssoc(movieId, genreId);
+  }
+
+  public void deleteMovieLanguageAssoc(int movieId, int languageId) {
+    movieRepository.deleteMovieLanguageAssoc(movieId, languageId);
+  }
 }

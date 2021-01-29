@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:fragment="head">
   <meta charset="UTF-8">
   <title th:text="${title}">MovieCollection</title>
@@ -12,33 +12,28 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navigation">
-  <a class="navbar-brand" href="#">Home</a>
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #897992;" th:fragment="navigation">
+  <a class="navbar-brand" th:href="@{/movies/get_all_movies}">HOME</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" th:href="@{/movies/get_all_movies}">Movies <span class="sr-only">(current)</span></a>
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/movies/get_all_movies}">Movies </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" th:href="@{/performers/get_all_performers}">Performers </a>
+        <a class="nav-link" th:href="@{/performers/get_all_performers}">Actor/Actress </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" th:href="@{/genres/get_all_genres}">Genres </a>
       </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Settings
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
+      <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+        <a class="nav-link" th:href="@{/users/display_admin_panel}">AdminPanel </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/logout}">Logout </a>
       </li>
     </ul>
   </div>

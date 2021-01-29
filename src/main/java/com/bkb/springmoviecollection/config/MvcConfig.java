@@ -21,9 +21,9 @@ public class MvcConfig implements WebMvcConfigurer {
 
   @Override
   public void addViewControllers(ViewControllerRegistry registry) {
-    /*registry.addRedirectViewController("/", "/main");
-    registry.addViewController("/main").setViewName("main");
-    registry.addViewController("/login").setViewName("login");*/
+    registry.addViewController("/login").setViewName("user/login");
+    registry.addRedirectViewController("/register", "/users/register");
+    registry.addRedirectViewController("/", "/movies/get_all_movies");
   }
 
   private void exposeDirectory(String dir, ResourceHandlerRegistry registry) {

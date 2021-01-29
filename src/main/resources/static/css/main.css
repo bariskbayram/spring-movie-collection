@@ -4,18 +4,38 @@
   padding: 0;
 }
 
-#dropPerformer, #dropGenre, #dropLanguage {
+#dropGenre, #dropLanguage {
   padding: 8px;
-  width: 300px;
+  width: 200px;
   cursor: pointer;
   box-sizing: border-box
 }
+
+#dropPerformer {
+  padding: 8px;
+  width: 100%;
+  cursor: pointer;
+  box-sizing: border-box
+}
+
+#addMovie {
+  margin-top: 20px;
+}
+
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 30px;
+  justify-content: space-between;
+}
+
 .dropdown {
   position: relative;
-  display: inline-block
+  display: inline-block;
 }
 .content {
   display: none;
+  top: 45px;
   position: absolute;
   background-color: #f1f1f1;
   min-width: 200px;
@@ -23,9 +43,14 @@
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, .2);
   z-index: 1
 }
+
+#contentPerformer {
+  width: 95%;
+}
+
 .role {
   float: right;
-  width: 40px
+  width: 50%;
 }
 .content div {
   padding: 10px 15px
@@ -74,4 +99,61 @@
 
 .addButton {
   margin-top: 15px;
+}
+
+.detail-image {
+  margin: 30px 30px;
+  max-width: 200px;
+}
+
+.movieDetail{
+  align-self: center;
+  text-align: center;
+}
+
+.flex-title {
+  display: flex;
+  align-items: center;
+}
+
+.btn-performer {
+  margin-left: 10px;
+}
+
+.actor-title {
+  margin-right: 10px;
+}
+
+.media-info {
+  display: flex;
+}
+
+.addMovieButton {
+  align-self: center;
+  margin-top: 10px;
+}
+
+.addMovieCheckbox {
+  margin-top: 20px;
+  max-width: 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.addMovieCheckboxPerformer {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.addMovieSubmit {
+  margin: 20px 0;
+  width: 450px;
+  height: 60px;
+  align-self: center;
+}
+
+#addMovie {
+  display: flex;
+  flex-direction: column;
 }

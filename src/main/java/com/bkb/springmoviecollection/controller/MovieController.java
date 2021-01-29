@@ -14,11 +14,11 @@ import com.bkb.springmoviecollection.model.search.MoviePage;
 import com.bkb.springmoviecollection.model.search.MovieSpecification;
 import com.bkb.springmoviecollection.service.*;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -47,6 +47,7 @@ public class MovieController {
   }
 
   @GetMapping("get_all_movies")
+  @PreAuthorize("hasAuthority('data:read')")
   public String getAllMovies(MoviePage moviePage, Model model) {
     Page<Movie> movies = movieService.getAllMovies(moviePage);
     List<MovieDto> movieDtos = movies.stream().map(MovieDto::from)
@@ -56,6 +57,7 @@ public class MovieController {
   }
 
   @GetMapping(value = "get_by_id/", params = "id")
+  @PreAuthorize("hasAuthority('data:read')")
   public String getMovieById(@RequestParam("id") int movieId, Model model) {
     Movie movie = movieService.getMovieById(movieId);
     List<Genre> genres = genreService.getGenreByMovieId(movieId);
@@ -64,18 +66,17 @@ public class MovieController {
     List<Language> languages = languageService.getLanguageByMovieId(movieId);
     List<LanguageDto> languageDtos = languages.stream().map(LanguageDto::from)
         .collect(Collectors.toList());
-    List<Performer> performers = performerService.getPerformersByMovieId(movieId);
-    List<PerformerDto> performerDtos = performers.stream().map(PerformerDto::from)
-        .collect(Collectors.toList());
+    List<PerformerDto> performers = performerService.getPerformersByMovieId(movieId);
 
     model.addAttribute("movie", MovieDto.from(movie));
     model.addAttribute("genres", genreDtos);
     model.addAttribute("languages", languageDtos);
-    model.addAttribute("performers", performerDtos);
+    model.addAttribute("performers", performers);
     return "movie/movieDetail";
   }
 
   @GetMapping("get_movies_search_by")
+  @PreAuthorize("hasAuthority('data:read')")
   public String getMoviesSearchTitle(
       MovieSpecification movieSpecification, MoviePage moviePage, Model model) {
 
@@ -88,6 +89,7 @@ public class MovieController {
   }
 
   @GetMapping("display_add_movie")
+  @PreAuthorize("hasAuthority('data:insert')")
   public String getAddMoviePage(Model model) {
     MovieDto movieDto = new MovieDto();
     movieDto.setSelectedPerformerDtoList(getPerformerList());
@@ -99,6 +101,7 @@ public class MovieController {
   }
 
   @PostMapping("add_movie")
+  @PreAuthorize("hasAuthority('data:insert')")
   public String addMovie(@ModelAttribute MovieDto movieDto) {
     String fileName = StringUtils.cleanPath(movieDto.getMultipartFile().getOriginalFilename());
     movieDto.setMediaPath(fileName);
@@ -138,38 +141,38 @@ public class MovieController {
   }
 
   @RequestMapping(value = "delete_by_id", params = "id")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
   public String deleteMovieById(@RequestParam("id") int movieId) {
     movieService.deleteMovieById(movieId);
     return "redirect:/movies/get_all_movies";
   }
 
   @RequestMapping(value = "display_edit_by_id", params = "id")
+  @PreAuthorize("hasAuthority('data:update')")
   public String editMovieById(@RequestParam("id") int movieId, Model model) {
-    MovieDto movieDto = MovieDto.from(movieService.getMovieById(movieId));
-
-    /*List<Genre> genres = genreService.getGenreByMovieId(movieId);
-    List<GenreDto> genreDtos = genres.stream().map(GenreDto::from)
-        .collect(Collectors.toList());
-    List<Language> languages = languageService.getLanguageByMovieId(movieId);
-    List<LanguageDto> languageDtos = languages.stream().map(LanguageDto::from)
-        .collect(Collectors.toList());
-    List<Performer> performers = performerService.getPerformersByMovieId(movieId);
-    List<PerformerDto> performerDtos = performers.stream().map(PerformerDto::from)
-        .collect(Collectors.toList());
+    /*MovieDto movieDto = MovieDto.from(movieService.getMovieById(movieId));
 
 
-    movieDto.setSelectedPerformerDtoList(performerDtos);
-
-    model.addAttribute("selectedGenreIdList", genreDtos);
-    model.addAttribute("selectedLanguageIdList", languageDtos);
-    model.addAttribute("selectedPerformerDtoList", performerDtos);
-
-    model.addAttribute("genreList", getGenreList());
-    model.addAttribute("languageList", getLanguageList());
-    model.addAttribute("performerList", getPerformerList());*/
-
-    model.addAttribute("movieDto", movieDto);
+    model.addAttribute("movieDto", movieDto);*/
     return "movie/editMovie";
+  }
+
+  @RequestMapping(value = "delete_assoc_movie_genre/", params = {"movieId", "genreId"})
+  @PreAuthorize("hasAuthority('data:update')")
+  public String removeAssocMovieGenre(@RequestParam("movieId") int movieId,
+                                      @RequestParam("genreId") int genreId) {
+
+    movieService.deleteMovieGenreAssoc(movieId, genreId);
+    return String.format("redirect:/movies/get_by_id/?id=%s", movieId);
+  }
+
+  @RequestMapping(value = "delete_assoc_movie_language/", params = {"movieId", "languageId"})
+  @PreAuthorize("hasAuthority('data:update')")
+  public String removeAssocMovieLanguage(@RequestParam("movieId") int movieId,
+                                      @RequestParam("languageId") int languageId) {
+
+    movieService.deleteMovieLanguageAssoc(movieId, languageId);
+    return String.format("redirect:/movies/get_by_id/?id=%s", movieId);
   }
 
   private List<GenreDto> getGenreList() {

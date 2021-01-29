@@ -1,8 +1,38 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-</head>
+<head th:replace="fragments :: head"></head>
 <body>
+  <nav th:replace="fragments :: navigation"></nav>
+
+  <div class="flex-column movie-search mt-5">
+    <h4 class="bg-gradient-success">Manage User Roles</h4>
+  </div>
+
+  <div class="container">
+    <table class="table">
+      <tr>
+        <th>Index</th>
+        <th>Fullname</th>
+        <th>Username</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+      <tr th:each="user,i : ${userList}">
+        <td th:text="${i.count}"></td>
+        <td th:text="${user.fullname}"></td>
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.userRole}"></td>
+        <td>
+          <div class="actions" th:switch="${user.userRole}">
+            <a th:case="'USER'" th:href="@{/users/setAdmin/(id=${user.userId})}"
+               class="btn btn-warning" style="margin-bottom: 10px">Set Admin Permissions</a>
+            <a th:case="'ADMIN'" th:href="@{/users/setUser/(id=${user.userId})}"
+               class="btn btn-danger">Set User Permissions</a>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
 
 </body>
 </html>

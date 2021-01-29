@@ -13,6 +13,12 @@ public class PerformerDto {
   public PerformerDto() {
   }
 
+  public PerformerDto(int performerId, String fullname, String performerRole) {
+    this.performerId = performerId;
+    this.fullname = fullname;
+    this.performerRole = performerRole;
+  }
+
   public PerformerDto(int performerId, String performerRole) {
     this.performerId = performerId;
     this.performerRole = performerRole;

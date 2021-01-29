@@ -1,5 +1,6 @@
 package com.bkb.springmoviecollection.repository;
 
+import com.bkb.springmoviecollection.model.dto.PerformerDto;
 import com.bkb.springmoviecollection.model.entity.Performer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -11,8 +12,8 @@ import java.util.List;
 
 public interface PerformerRepository extends JpaRepository<Performer, Integer> {
 
-  @Query("select p from Performer p left outer join fetch p.moviesAssoc ma left outer join fetch ma.movie m where m.movieId = :id")
-  List<Performer> findAllByMovieId(@Param("id") int id);
+  @Query("select new com.bkb.springmoviecollection.model.dto.PerformerDto(p.performerId, p.fullname, ma.performerRole) from Performer p left outer join p.moviesAssoc ma left outer join ma.movie m where m.movieId = :id")
+  List<PerformerDto> findAllByMovieId(@Param("id") int id);
 
   @Modifying
   @Transactional
