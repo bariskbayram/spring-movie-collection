@@ -2,7 +2,6 @@ package com.bkb.springmoviecollection.config.security;
 
 import com.bkb.springmoviecollection.model.entity.User;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -13,15 +12,6 @@ public class CUserDetails implements UserDetails {
   private String username;
   private String password;
   private Set<? extends GrantedAuthority> grantedAuthorities;
-
-  public CUserDetails() {
-  }
-
-  public CUserDetails(String username, String password, Set<SimpleGrantedAuthority> grantedAuthorities) {
-    this.username = username;
-    this.password = password;
-    this.grantedAuthorities = grantedAuthorities;
-  }
 
   public static CUserDetails from(User user) {
     CUserDetails cUserDetails = new CUserDetails();

@@ -27,10 +27,12 @@ public class MovieSpecification implements Specification<Movie> {
 
     if(key.equals("fullname")) {
       Join<Object, Object> p = root.join("performersAssoc").join("performer");
+      criteriaQuery.distinct(true);
       return criteriaBuilder.like(
           criteriaBuilder.lower(p.get(key)), "%" + value.toLowerCase(Locale.ROOT) + "%");
     }else if(key.equals("genreName")) {
       Join<Object, Object> g = root.join("genres");
+      criteriaQuery.distinct(true);
       return criteriaBuilder.like(
           criteriaBuilder.lower(g.get(key)), "%" + value.toLowerCase(Locale.ROOT) + "%");
     }

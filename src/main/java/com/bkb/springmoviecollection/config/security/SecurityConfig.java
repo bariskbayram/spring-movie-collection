@@ -29,23 +29,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
-        .csrf().disable()
-        /*.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-        .and()*/
         .authorizeRequests()
         .antMatchers("/", "/register", "/users/register", "/css/*").permitAll()
         .anyRequest()
         .authenticated()
         .and()
         .formLogin()
-          .loginPage("/login").permitAll()
+          .loginPage("/login")
           .defaultSuccessUrl("/movies/get_all_movies", true)
+        .permitAll()
         .and()
         .logout()
           .logoutUrl("/logout")
-          .clearAuthentication(true)
-          .invalidateHttpSession(true)
-          .logoutSuccessUrl("/login");
+          .logoutSuccessUrl("/login")
+        .permitAll();
 
   }
 

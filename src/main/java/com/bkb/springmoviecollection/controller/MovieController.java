@@ -49,9 +49,12 @@ public class MovieController {
   @GetMapping("get_all_movies")
   @PreAuthorize("hasAuthority('data:read')")
   public String getAllMovies(MoviePage moviePage, Model model) {
+
+    //Casting Movie to MovieDto, it's not necessary for now
     Page<Movie> movies = movieService.getAllMovies(moviePage);
     List<MovieDto> movieDtos = movies.stream().map(MovieDto::from)
         .collect(Collectors.toList());
+
     model.addAttribute("movieList", movieDtos);
     return "movie/movieList";
   }
@@ -60,6 +63,8 @@ public class MovieController {
   @PreAuthorize("hasAuthority('data:read')")
   public String getMovieById(@RequestParam("id") int movieId, Model model) {
     Movie movie = movieService.getMovieById(movieId);
+
+    //Casting Genre, Language to GenreDto, LanguageDto, it's not necessary for now
     List<Genre> genres = genreService.getGenreByMovieId(movieId);
     List<GenreDto> genreDtos = genres.stream().map(GenreDto::from)
         .collect(Collectors.toList());
@@ -80,6 +85,7 @@ public class MovieController {
   public String getMoviesSearchTitle(
       MovieSpecification movieSpecification, MoviePage moviePage, Model model) {
 
+    //Casting Movie to DTO, it's not necessary for now
     Page<Movie> movies = movieService.searchBy(movieSpecification, moviePage);
     List<MovieDto> movieDtos = movies.stream().map(MovieDto::from)
         .collect(Collectors.toList());
@@ -105,6 +111,7 @@ public class MovieController {
   public String addMovie(@ModelAttribute MovieDto movieDto) {
     String fileName = StringUtils.cleanPath(movieDto.getMultipartFile().getOriginalFilename());
     movieDto.setMediaPath(fileName);
+
     List<Genre> genres = movieDto.getSelectedGenreIdList().stream()
         .map(genreId -> genreService.getGenreById(genreId))
         .collect(Collectors.toList());
@@ -147,16 +154,6 @@ public class MovieController {
     return "redirect:/movies/get_all_movies";
   }
 
-  @RequestMapping(value = "display_edit_by_id", params = "id")
-  @PreAuthorize("hasAuthority('data:update')")
-  public String editMovieById(@RequestParam("id") int movieId, Model model) {
-    /*MovieDto movieDto = MovieDto.from(movieService.getMovieById(movieId));
-
-
-    model.addAttribute("movieDto", movieDto);*/
-    return "movie/editMovie";
-  }
-
   @RequestMapping(value = "delete_assoc_movie_genre/", params = {"movieId", "genreId"})
   @PreAuthorize("hasAuthority('data:update')")
   public String removeAssocMovieGenre(@RequestParam("movieId") int movieId,
@@ -172,6 +169,72 @@ public class MovieController {
                                       @RequestParam("languageId") int languageId) {
 
     movieService.deleteMovieLanguageAssoc(movieId, languageId);
+    return String.format("redirect:/movies/get_by_id/?id=%s", movieId);
+  }
+
+  @RequestMapping(value = "removeassoc_movie_performer", params = {"movieId", "performerId"})
+  @PreAuthorize("hasAuthority('data:update')")
+  public String removeAssocMoviePerformer(@RequestParam("movieId") int movieId,
+                                          @RequestParam("performerId") int performerId) {
+
+    moviePerformerService.removeMoviePerformer(movieId, performerId);
+    return String.format("redirect:/movies/get_by_id/?id=%s", movieId);
+  }
+
+  @RequestMapping(value = "update_role_modal/", params = {"movieId", "performerId", "currentRole"})
+  @PreAuthorize("hasAuthority('data:update')")
+  public String updateRoleModal(@RequestParam("movieId") int movieId,
+                                 @RequestParam("performerId") int performerId,
+                                 @RequestParam("currentRole") String currentRole,
+                                 Model model) {
+
+    //Trying to use same modal for all edit operations to be more modular
+    model.addAttribute("title", "Edit Performer Role");
+    model.addAttribute("url",
+        String.format("/movies/update_role/?movieId=%s&performerId=%s", new Object[]{movieId, performerId}));
+    model.addAttribute("modalId", "editPerformerRoleModal");
+    model.addAttribute("field", "newRole");
+    model.addAttribute("value", currentRole);
+    return "fragments :: editModal";
+  }
+
+  @RequestMapping(value = "update_role/", params = {"movieId", "performerId", "newRole"})
+  @PreAuthorize("hasAuthority('data:update')")
+  public String updateGenreById(@RequestParam("movieId") int movieId,
+                                @RequestParam("performerId") int performerId,
+                                @RequestParam("newRole") String newRole) {
+    moviePerformerService.changeRole(movieId, performerId, newRole);
+    return String.format("redirect:/movies/get_by_id/?id=%s", movieId);
+  }
+
+  @RequestMapping(value = "add_performer_to_movie_modal/", params = "movieId")
+  @PreAuthorize("hasAuthority('data:update')")
+  public String addPerformerToMovieModal(@RequestParam("movieId") int movieId, Model model) {
+    List<Performer> performers = performerService.getAllPerformers();
+    List<PerformerDto> performerDtos = performers.stream().map(PerformerDto::from).collect(Collectors.toList());
+
+    model.addAttribute("performerList", performerDtos);
+    model.addAttribute("url",
+        String.format("/movies/add_performer_to_movie/?movieId=%s", new Object[]{movieId}));;
+    model.addAttribute("movieDto", new MovieDto());
+    return "fragments :: addPerformerModal";
+  }
+
+  @RequestMapping(value = "add_performer_to_movie/", params = "movieId")
+  @PreAuthorize("hasAuthority('data:update')")
+  public String addPerformerToMovie(@RequestParam("movieId") int movieId,
+                                    MovieDto movieDto) {
+
+    List<Performer> performers = movieDto.getSelectedPerformerDtoList().stream()
+        .filter(p -> p.getPerformerId() != 0)
+        .map(performerDto -> {
+          Performer performer = performerService.getPerformerById(performerDto.getPerformerId());
+          performer.setPerformerRole(performerDto.getPerformerRole());
+          return performer;
+        }).collect(Collectors.toList());
+
+    Movie movie = movieService.getMovieById(movieId);
+    moviePerformerService.addPerformersToMovie(movie, performers);
     return String.format("redirect:/movies/get_by_id/?id=%s", movieId);
   }
 

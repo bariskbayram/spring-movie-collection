@@ -23,10 +23,6 @@ public class MovieDto {
   public MovieDto() {
   }
 
-  public void addPerformerDto(int id, String role) {
-    selectedPerformerDtoList.add(new PerformerDto(id, role));
-  }
-
   public String getPhotosImagePath() {
     if(mediaPath == null || movieId == 0 ) {
       return null;

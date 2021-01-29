@@ -29,7 +29,7 @@ public class Language {
   @Column(name = "language_name", nullable = false)
   private String languageName;
 
-  @ManyToMany(mappedBy = "languages", cascade = CascadeType.REMOVE)
+  @ManyToMany(mappedBy = "languages")
   private List<Movie> movies = new ArrayList<>();
 
   public Language(String languageName) {
@@ -40,6 +40,11 @@ public class Language {
     Language language = new Language();
     language.setLanguageName(languageDTO.getLanguageName());
     return language;
+  }
+
+  @PreRemove
+  public void removeMovies() {
+    movies.forEach(movie -> movie.removeLanguage(this));
   }
 
   @Override

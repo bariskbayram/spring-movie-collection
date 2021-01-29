@@ -38,12 +38,11 @@
   <div id="editGenreHolder"></div>
 
 <script>
+  // Implemented for triggering modal
   function openGenreModal(id, name) {
-    console.log("selam1")
     $.ajax({
       url: "/genres/update_genre_modal/?id=" + id + "&name=" + name,
       success: function (data) {
-        console.log("selam")
         $("#editGenreHolder").html(data);
         $("#editGenreModal").modal("show");
       }

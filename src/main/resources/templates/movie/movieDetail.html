@@ -12,10 +12,9 @@
         <p th:text="${movie.description}">Description</p>
         <div>
           <div class="d-flex flex-row justify-content-around">
-            <div>
+            <div class="ml-5 mr-5">
               <div class="d-flex" style="border-bottom: 1px solid black">
                 <span><b>Genres: </b></span>
-                <a href="#" class="ml-3">Add more</a>
               </div>
               <div class="d-flex" th:each="genre: ${genres}">
                 <a th:href="@{'/movies/get_movies_search_by?key=genreName&direction=ASC&value=' + '__${genre.genreName}__'}"
@@ -24,10 +23,9 @@
                     class="text-danger">Remove</a>
               </div>
             </div>
-            <div>
+            <div class="ml-5 mr-5">
               <div class="d-flex" style="border-bottom: 1px solid black">
                 <span><b>Languages: </b></span>
-                <a href="#" class="ml-3">Add more</a>
               </div>
               <div th:each="lang: ${languages}">
                 <span  th:text="${lang.languageName} + ' '" class="mr-3">English</span>
@@ -40,24 +38,47 @@
       </div>
     </div>
     <div class="list-group">
-      <div class="flex-row flex-title">
+      <div class="flex-row flex-title mb-3">
         <h3 class="actor-title">Actors/Actresses</h3>
-        <a href="#">Add more</a>
+        <a class="btn btn-primary"
+           th:attr="onclick=|openNewPerformerModal('${movie.movieId}');|">
+          Add more
+        </a>
       </div>
-      <div class="d-flex" th:each="performer: ${performers}">
+      <div class="d-flex mb-2" th:each="performer: ${performers}">
         <a class="list-group-item list-group-item-action active"
            th:href="@{'/movies/get_movies_search_by?key=fullname&direction=ASC&value=' + '__${performer.fullname}__'}"
            th:text="${performer.fullname} + ' ( ' + ${performer.performerRole} + ' )'">Leonardo DiCaprio</a>
-        <a href="#"
+        <a th:attr="onclick=|openRoleModal('${movie.movieId}', '${performer.performerId}', '${performer.performerRole}');|"
            class="btn btn-warning btn-performer">Edit Role</a>
-        <a href="#"
+        <a th:href="@{/movies/removeassoc_movie_performer/(movieId=${movie.movieId}, performerId=${performer.performerId})}"
            class="btn btn-danger btn-performer">Remove</a>
       </div>
-
       </a>
     </div>
+    <div id="editModalHolder"></div>
 
   </div>
 
+  <script>
+    function openRoleModal(movieId, performerId, role) {
+      $.ajax({
+        url: "/movies/update_role_modal/?movieId=" + movieId + "&performerId=" + performerId + "&currentRole=" + role,
+        success: function (data) {
+          $("#editModalHolder").html(data);
+          $("#editPerformerRoleModal").modal("show");
+        }
+      });
+    };
+    function openNewPerformerModal(movieId) {
+      $.ajax({
+        url: "/movies/add_performer_to_movie_modal/?movieId=" + movieId,
+        success: function (data) {
+          $("#editModalHolder").html(data);
+          $("#addPerformerModal").modal("show");
+        }
+      });
+    }
+  </script>
 </body>
 </html>

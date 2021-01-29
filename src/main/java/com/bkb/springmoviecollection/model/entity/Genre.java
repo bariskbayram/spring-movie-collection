@@ -29,7 +29,7 @@ public class Genre {
   @Column(name = "genre_name", nullable = false)
   private String genreName;
 
-  @ManyToMany(mappedBy = "genres", cascade = CascadeType.REMOVE)
+  @ManyToMany(mappedBy = "genres")
   private List<Movie> movies = new ArrayList<>();
 
   public Genre(String genreName) {
@@ -40,6 +40,11 @@ public class Genre {
     Genre genre = new Genre();
     genre.setGenreName(genreDTO.getGenreName());
     return genre;
+  }
+
+  @PreRemove
+  public void removeMovies() {
+    movies.forEach(movie -> movie.removeGenre(this));
   }
 
   @Override

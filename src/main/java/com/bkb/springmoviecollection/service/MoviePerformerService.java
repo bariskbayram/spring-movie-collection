@@ -22,4 +22,12 @@ public class MoviePerformerService {
         moviePerformerRepository.save(new MoviePerformer(movie, performer, performer.getPerformerRole())));
   }
 
+  public void removeMoviePerformer(int movieId, int performerId) {
+    moviePerformerRepository.removeMoviePerformer(movieId, performerId);
+  }
+
+  public void changeRole(int movieId, int performerId, String newRole) {
+    moviePerformerRepository.changeRole(movieId, performerId, newRole);
+  }
+
 }

@@ -25,8 +25,8 @@ public class GenreController {
   @PreAuthorize("hasAuthority('data:read')")
   public String getAllGenres(Model model) {
     List<Genre> genres = genreService.getAllGenres();
-    List<GenreDto> genreDtos =
-        genres.stream().map(GenreDto::from).collect(Collectors.toList());
+    List<GenreDto> genreDtos = genres.stream()
+        .map(GenreDto::from).collect(Collectors.toList());
     model.addAttribute("genreList", genreDtos);
     return "genre/genreList";
   }
@@ -74,12 +74,13 @@ public class GenreController {
                                  @RequestParam("name") String genreName,
                                  Model model) {
 
+    //Trying to use same modal for all edit operations to be more modular
     model.addAttribute("title", "Edit Genre");
     model.addAttribute("url", String.format("/genres/update_genre_by_id/?id=%s", new Object[]{genreId}));
     model.addAttribute("modalId", "editGenreModal");
     model.addAttribute("field", "genreName");
-    model.addAttribute("genre", new GenreDto(genreId, genreName));
-    return "fragments :: editGenreModal";
+    model.addAttribute("value", genreName);
+    return "fragments :: editModal";
   }
 
   @RequestMapping(value = "update_genre_by_id/", params = {"id", "genreName"})

@@ -69,8 +69,8 @@ public class PerformerController {
     model.addAttribute("url", String.format("/performers/update_performer_by_id/?id=%s", new Object[]{performerId}));
     model.addAttribute("modalId", "editPerformerModal");
     model.addAttribute("field", "fullname");
-    model.addAttribute("performer", new PerformerDto(fullname, performerId));
-    return "fragments :: editPerformerModal";
+    model.addAttribute("value", fullname);
+    return "fragments :: editModal";
   }
 
   @RequestMapping(value = "update_performer_by_id/", params = {"id", "fullname"})

@@ -12,11 +12,6 @@ public class LanguageDto {
   public LanguageDto() {
   }
 
-  public LanguageDto(int languageId, String languageName) {
-    this.languageId = languageId;
-    this.languageName = languageName;
-  }
-
   public static LanguageDto from(Language language) {
     LanguageDto languageDTO = new LanguageDto();
     languageDTO.setLanguageId(language.getLanguageId());
