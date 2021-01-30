@@ -1,0 +1,46 @@
+= Film Koleksiyonu Projesi
+Barış Kaan Bayram <bariskaanb@gmail.com>
+1.0, 29 Ocak 2021
+
+== Kurulum ve Çalıştırma
+
+https://github.com/bariskbayram/spring-movie-collection[Projenin github adresi, role=external, window=_blank]
+
+Uygulamanın kurulumu için birden fazla yol belirledim.
+
+* Docker ile container içinde çalıştırılması.
+```
+      $ mvn clean install -DskipTests
+      $ docker-compose up --build
+```
+
+* Container olmadan yerel makinada çalıştırılması. Bu yolun izlenebilmesi için 'movie_collection' olarak isimlendirilmiş bir PostgreSQL veritabanı yaratılmış olması gerekir.
+```
+        $ mvn spring-boot:run
+```
+
+== Projenin detayları
+
+Projeye başlamadan önce var olan senaryoları değerlendirdim ve bu doğrultuda çizdiğim tabloda varlıklar arasındaki ilişkilendirmeleri belirledim. Görevi daha eğlenceli kılabilmek için sahip olduğum bilgilere göre daha da zorlaştırmaya çalıştım. İlişkilerin detayları;
+
+ * Bir filmde birden fazla oyuncu oynayabilir ve bir oyuncu da aynı şekilde birden fazla filmde oynayabilir. Bu doğrultuda film ve oyuncu arasındaki ilişkiyi tutan bir tablo daha oluşturulur, böylelikle oyuncunun filmdeki rolü bu tabloda spesifik filme özel şekilde tutulabilir. Deneyimleyebilmek için bu ilişki üçüncü bir varlık sınıfı yaratılarak bileşik anahtar (composite key) ile gerçekleştirildi.
+
+ * Bir filmi tanımlayan birden fazla tür ve dil seçeneği olabilir. Dil seçenekleri ve türe göre sınıflandırmak daha kolay olması için çoka-çok (ManyToMany) ilişki kuruldu.
+
+****
+Veritabanındaki tabloları temsil eden Movie, Performer, Genre gibi sınıflarla birlikte arayüze gönderilen bilgiler için DTO sınıfları da oluşturuldu. Tutarlı bir şekilde her yerde kullanıldı, fakat uygulamanın çoğu yerinde çok gerekli olmadığının farkındayım. Denemek istedim :)
+****
+
+JPA için Spring Data JPA kullanmayı tercih ettim ve tecrübem az olsa bile kullanımı çok daha elverişli ve geliştiricinin zamanını daha az aldığı için mantıklı bir seçim diye düşünüyorum. Fakat, kontrolün daha fazla elimde olduğu Spring Data JDBC kullanmayı tercih ederdim. Spring Data JPA, iyi kullanılmadığında veritabanına fazladan istek yollayabiliyor. Özellikle benim bu projede kullandığım gibi birden fazla tablo arasında 'Join' işlemi yapılması gerekiyorsa iş daha karmaşıklaşabiliyor, en azından şu ana kadar tecrübelediğim kadarıyla.
+
+Önce Spring ve Spring Data JPA ile RestController olarak gerçekleştirimi yaptım ve daha tecrübesiz olduğum Thymeleaf'i en sona bıraktım, fakat işimi beklediğimden çok daha uzattı. Öncelikle Thymeleaf'in nasıl çalıştığını ve mantığını anlamak için deneme projeleri yaptım. Daha modüler bir yapı tasarlamaya çalışırken, Thymeleaf'i eklemeye başlamadığımda yapının bozulduğunu düşünüyorum. Thymeleaf'i de aynı şekilde benzer yapıların olduğu çoğu yerde *fragment* özelliklerini kullanarak kod tekrarını engellemeye çalıştım. Thymeleaf'i bu şekilde kullanmaya çalışmak bu projede beni en çok zorlayan süreçti.
+
+Projenin temel yapısı film tanımları olduğu için çoğu işlem 'Movie' nesnesi vasıtasıyla olması gerektiğini düşündüm ve çoğu veri alışverişi 'MovieController' üzerinden gerçekleştirmek zorunda kaldım. 'MovieController' ın bağımlığı çok arttı ve bütün servisleri bilir hale geldi. Bu çok rahatsız etse bile daha verimli bir yol bulamadım. Kodu yeniden gözden geçirme sürecinde bu bağımlılıkları 'MovieService' e aktarmayı ve en azından aynı katmandaki sınıfların birbirleriyle iletişimi artar diye düşünüyorum. Bu gibi durumlardaki düşüncelerinizi ve eleştirilerinizi benimle paylaşırsanız sevinirim.
+
+Güvenlik gerçekleştirimi için form tabanlı bir yapılandırma kullandım. Daha modüler bir yapı için kullanıcı rolleri ve yetkileri ayrı olarak tasarladım, böylelikle yeni rol eklenmesi veya yetki değiştirmelerinden uygulama daha az etkilenecektir.
+
+Medya için bir fotoğraf yükleneceğini varsaydım, kendi hobi projelerimde bu dosyaları başka bir sunucuda tutup veri alışverişini bu şekilde yapmayı tercih ederim. Projeyi daha karmaşıklaştırmamak için diğer seçeneklerin dışında uygulamanın çalıştığı dizinde bir dosyada tutmayı daha mantıklı buldum. Veritabanında tutmak hiçbir zaman hoşuma gitmeyen bir fikir olmasına rağmen en azından veri tutarlılığı açısından daha mantıklı olduğunu düşünüyorum.
+
+Test yazmayı severim ve çok istedim fakat, görevi aldıktan epey bir süre sonra bitirebildiğim için ilerleyen günlerde kendi gelişimim için ertelemeye karar verdim.
+
+Teşekkür Ederim.
