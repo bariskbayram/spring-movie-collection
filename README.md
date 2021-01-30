@@ -3,6 +3,8 @@
 [![Apache-2.0 License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
+Project details and also it's a note for me to see my old concerns. [![ProjectNotes][notes-shield]][notes-url]
+
 This is a demo project for practicing the usage of Spring Data JPA and Thymeleaf. It has the most common features that are used for some CRUD operations.
 
 * Add movie, actor/actress, genre, language
@@ -56,3 +58,5 @@ This is a demo project for practicing the usage of Spring Data JPA and Thymeleaf
 [linkedin-url]: https://www.linkedin.com/in/bariskbayram/
 [license-shield]: https://img.shields.io/static/v1?label=LICENCE&message=Apache-2.0&color=<COLOR>
 [license-url]: https://github.com/bariskbayram/spring-movie-collection/blob/master/LICENSE
+[notes-shield]: https://img.shields.io/static/v1?label=INFO&message=NOTES&color=<COLOR>
+[notes-url]: https://github.com/bariskbayram/spring-movie-collection/blob/master/project-notes.adoc
