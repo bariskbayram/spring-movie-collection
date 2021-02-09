@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/users")
@@ -42,8 +41,7 @@ public class UserController {
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   public String displayAdminPanel(Model model) {
     List<User> userList = cUserDetailsService.getAllUsers();
-    List<UserDto> userDtos = userList.stream().map(UserDto::from)
-        .collect(Collectors.toList());
+    List<UserDto> userDtos = UserDto.from(userList);
     model.addAttribute("userList", userDtos);
     return "user/adminPage";
   }

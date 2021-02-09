@@ -18,18 +18,18 @@ public enum UserRole {
       UserPermission.DATA_UPDATE,
       UserPermission.DATA_DELETE));
 
-  private final Set<UserPermission> permissions;
+  private final Set<UserPermission> userPermissions;
 
-  UserRole(Set<com.bkb.springmoviecollection.config.security.UserPermission> permissions) {
-    this.permissions = permissions;
+  UserRole(Set<com.bkb.springmoviecollection.config.security.UserPermission> userPermissions) {
+    this.userPermissions = userPermissions;
   }
 
-  public Set<com.bkb.springmoviecollection.config.security.UserPermission> getPermissions() {
-    return permissions;
+  public Set<com.bkb.springmoviecollection.config.security.UserPermission> getUserPermissions() {
+    return userPermissions;
   }
 
   public Set<SimpleGrantedAuthority> getGrantedAuthorities(){
-    Set<SimpleGrantedAuthority> permissions = getPermissions().stream()
+    Set<SimpleGrantedAuthority> permissions = getUserPermissions().stream()
         .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
         .collect(Collectors.toSet());
     permissions.add(new SimpleGrantedAuthority("ROLE_" + this.name()));

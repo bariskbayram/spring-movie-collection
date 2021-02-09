@@ -5,6 +5,8 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class UserDto {
@@ -29,6 +31,12 @@ public class UserDto {
     userDto.setUsername(user.getUsername());
     userDto.setUserRole(user.getUserRole());
     return userDto;
+  }
+
+  public static List<UserDto> from(List<User> users) {
+    return users.stream()
+            .map(UserDto::from)
+            .collect(Collectors.toList());
   }
 
   @Override

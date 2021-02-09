@@ -1,6 +1,5 @@
 package com.bkb.springmoviecollection.model.entity;
 
-
 import com.bkb.springmoviecollection.model.dto.PerformerDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -45,6 +45,12 @@ public class Performer {
     Performer performer = new Performer();
     performer.setFullname(performerDTO.getFullname());
     return performer;
+  }
+
+  public static List<Performer> from(List<PerformerDto> performerDtos) {
+    return performerDtos.stream()
+            .map(Performer::from)
+            .collect(Collectors.toList());
   }
 
   @Override

@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -36,10 +37,16 @@ public class Genre {
     this.genreName = genreName;
   }
 
-  public static Genre from(GenreDto genreDTO) {
+  public static Genre from(GenreDto genreDto) {
     Genre genre = new Genre();
-    genre.setGenreName(genreDTO.getGenreName());
+    genre.setGenreName(genreDto.getGenreName());
     return genre;
+  }
+
+  public static List<Genre> from(List<GenreDto> genreDtos) {
+    return genreDtos.stream()
+            .map(Genre::from)
+            .collect(Collectors.toList());
   }
 
   @PreRemove

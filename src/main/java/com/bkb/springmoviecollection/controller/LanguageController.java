@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/languages")
@@ -24,9 +23,7 @@ public class LanguageController {
   @PreAuthorize("hasAuthority('data:read')")
   public List<LanguageDto> getAllLanguages() {
     List<Language> languages = languageService.getAllLanguages();
-    List<LanguageDto> languageDtos =
-        languages.stream().map(LanguageDto::from).collect(Collectors.toList());
-    return languageDtos;
+    return LanguageDto.from(languages);
   }
 
   @GetMapping("get_by_id/{id}")
@@ -40,9 +37,7 @@ public class LanguageController {
   @PreAuthorize("hasAuthority('data:read')")
   public List<LanguageDto> getLanguageByMovieId(@RequestParam("id") int movieId) {
     List<Language> languages = languageService.getLanguageByMovieId(movieId);
-    List<LanguageDto> languageDtos = languages.stream()
-        .map(LanguageDto::from).collect(Collectors.toList());
-    return languageDtos;
+    return LanguageDto.from(languages);
   }
 
   @PostMapping("add_language")

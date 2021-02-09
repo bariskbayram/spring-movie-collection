@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/genres")
@@ -25,8 +24,7 @@ public class GenreController {
   @PreAuthorize("hasAuthority('data:read')")
   public String getAllGenres(Model model) {
     List<Genre> genres = genreService.getAllGenres();
-    List<GenreDto> genreDtos = genres.stream()
-        .map(GenreDto::from).collect(Collectors.toList());
+    List<GenreDto> genreDtos = GenreDto.from(genres);
     model.addAttribute("genreList", genreDtos);
     return "genre/genreList";
   }
@@ -42,9 +40,7 @@ public class GenreController {
   @PreAuthorize("hasAuthority('data:read')")
   public List<GenreDto> getGenreByMovieId(@RequestParam("id") int movieId) {
     List<Genre> genres = genreService.getGenreByMovieId(movieId);
-    List<GenreDto> genreDtos = genres.stream()
-        .map(GenreDto::from).collect(Collectors.toList());
-    return genreDtos;
+    return GenreDto.from(genres);
   }
 
   @PostMapping("add_genre")
@@ -76,7 +72,7 @@ public class GenreController {
 
     //Trying to use same modal for all edit operations to be more modular
     model.addAttribute("title", "Edit Genre");
-    model.addAttribute("url", String.format("/genres/update_genre_by_id/?id=%s", new Object[]{genreId}));
+    model.addAttribute("url", String.format("/genres/update_genre_by_id/?id=%s", genreId));
     model.addAttribute("modalId", "editGenreModal");
     model.addAttribute("field", "genreName");
     model.addAttribute("value", genreName);

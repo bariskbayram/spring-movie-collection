@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -102,6 +102,12 @@ public class Movie {
     movie.setReleaseYear(movieDTO.getReleaseYear());
     movie.setMediaPath(movieDTO.getMediaPath());
     return movie;
+  }
+
+  public static List<Movie> from(List<MovieDto> movieDtos) {
+    return movieDtos.stream()
+            .map(Movie::from)
+            .collect(Collectors.toList());
   }
 
   @Override

@@ -11,6 +11,8 @@ import java.nio.file.StandardCopyOption;
 
 public class MediaUpload {
 
+  private MediaUpload() {}
+
   public static void saveFile(String dir,
                               String fileName,
                               MultipartFile multipartFile) throws IOException {

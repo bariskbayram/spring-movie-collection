@@ -52,8 +52,7 @@ public class MovieController {
 
     //Casting Movie to MovieDto, it's not necessary for now
     Page<Movie> movies = movieService.getAllMovies(moviePage);
-    List<MovieDto> movieDtos = movies.stream().map(MovieDto::from)
-        .collect(Collectors.toList());
+    List<MovieDto> movieDtos = MovieDto.from(movies.toList());
 
     model.addAttribute("movieList", movieDtos);
     return "movie/movieList";
@@ -66,11 +65,9 @@ public class MovieController {
 
     //Casting Genre, Language to GenreDto, LanguageDto, it's not necessary for now
     List<Genre> genres = genreService.getGenreByMovieId(movieId);
-    List<GenreDto> genreDtos = genres.stream().map(GenreDto::from)
-        .collect(Collectors.toList());
+    List<GenreDto> genreDtos = GenreDto.from(genres);
     List<Language> languages = languageService.getLanguageByMovieId(movieId);
-    List<LanguageDto> languageDtos = languages.stream().map(LanguageDto::from)
-        .collect(Collectors.toList());
+    List<LanguageDto> languageDtos = LanguageDto.from(languages);
     List<PerformerDto> performers = performerService.getPerformersByMovieId(movieId);
 
     model.addAttribute("movie", MovieDto.from(movie));
@@ -87,8 +84,7 @@ public class MovieController {
 
     //Casting Movie to DTO, it's not necessary for now
     Page<Movie> movies = movieService.searchBy(movieSpecification, moviePage);
-    List<MovieDto> movieDtos = movies.stream().map(MovieDto::from)
-        .collect(Collectors.toList());
+    List<MovieDto> movieDtos = MovieDto.from(movies.toList());
 
     model.addAttribute("movieList", movieDtos);
     return "movie/movieList";
@@ -113,10 +109,10 @@ public class MovieController {
     movieDto.setMediaPath(fileName);
 
     List<Genre> genres = movieDto.getSelectedGenreIdList().stream()
-        .map(genreId -> genreService.getGenreById(genreId))
+        .map(genreService::getGenreById)
         .collect(Collectors.toList());
     List<Language> languages = movieDto.getSelectedLanguageIdList().stream()
-        .map(languageId -> languageService.getLanguageById(languageId))
+        .map(languageService::getLanguageById)
         .collect(Collectors.toList());
     List<Performer> performers = movieDto.getSelectedPerformerDtoList().stream()
         .filter(p -> p.getPerformerId() != 0)
@@ -128,14 +124,18 @@ public class MovieController {
 
     Movie movie = movieService.addMovie(Movie.from(movieDto), genres, languages);
 
-    saveMediaFile(movieDto, movie.getMovieId());
+    try {
+      saveMediaFile(movieDto, movie.getMovieId());
+    } catch (ImageUploadException e) {
+      e.printStackTrace();
+    }
 
     moviePerformerService.addPerformersToMovie(movie, performers);
 
     return String.format("redirect:/movies/get_by_id/?id=%s", movie.getMovieId());
   }
 
-  private void saveMediaFile(MovieDto movieDto, int movieId) {
+  private void saveMediaFile(MovieDto movieDto, int movieId) throws ImageUploadException {
     String fileName = StringUtils.cleanPath(movieDto.getMultipartFile().getOriginalFilename());
     movieDto.setMediaPath(fileName);
 
@@ -143,7 +143,7 @@ public class MovieController {
       String uploadDir = "./movie-photos/" + movieId;
       MediaUpload.saveFile(uploadDir, fileName, movieDto.getMultipartFile());
     } catch (IOException ioException) {
-        new ImageUploadException(movieDto.getTitle());
+        throw new ImageUploadException(movieDto.getTitle());
     }
   }
 
@@ -204,18 +204,18 @@ public class MovieController {
                                 @RequestParam("performerId") int performerId,
                                 @RequestParam("newRole") String newRole) {
     moviePerformerService.changeRole(movieId, performerId, newRole);
-    return String.format("redirect:/movies/get_by_id/?id=%s", movieId);
+    return String.format("redirect:/movies/get_by_id/?id=%s", new Object[]{movieId});
   }
 
   @RequestMapping(value = "add_performer_to_movie_modal/", params = "movieId")
   @PreAuthorize("hasAuthority('data:update')")
   public String addPerformerToMovieModal(@RequestParam("movieId") int movieId, Model model) {
     List<Performer> performers = performerService.getAllPerformers();
-    List<PerformerDto> performerDtos = performers.stream().map(PerformerDto::from).collect(Collectors.toList());
+    List<PerformerDto> performerDtos = PerformerDto.from(performers);
 
     model.addAttribute("performerList", performerDtos);
     model.addAttribute("url",
-        String.format("/movies/add_performer_to_movie/?movieId=%s", new Object[]{movieId}));;
+        String.format("/movies/add_performer_to_movie/?movieId=%s", new Object[]{movieId}));
     model.addAttribute("movieDto", new MovieDto());
     return "fragments :: addPerformerModal";
   }
@@ -240,23 +240,17 @@ public class MovieController {
 
   private List<GenreDto> getGenreList() {
     List<Genre> genres = genreService.getAllGenres();
-    List<GenreDto> genreDtos = genres.stream().map(GenreDto::from)
-        .collect(Collectors.toList());
-    return genreDtos;
+    return GenreDto.from(genres);
   }
 
   private List<LanguageDto> getLanguageList() {
     List<Language> languages = languageService.getAllLanguages();
-    List<LanguageDto> languageDtos = languages.stream().map(LanguageDto::from)
-        .collect(Collectors.toList());
-    return languageDtos;
+    return LanguageDto.from(languages);
   }
 
   private List<PerformerDto> getPerformerList() {
     List<Performer> performers = performerService.getAllPerformers();
-    List<PerformerDto> performerDtos = performers.stream().map(PerformerDto::from)
-        .collect(Collectors.toList());
-    return performerDtos;
+    return PerformerDto.from(performers);
   }
 
 }

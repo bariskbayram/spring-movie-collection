@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class MovieDto {
@@ -38,5 +39,11 @@ public class MovieDto {
     movieDTO.setDescription(movie.getDescription());
     movieDTO.setMediaPath(movie.getMediaPath());
     return movieDTO;
+  }
+
+  public static List<MovieDto> from(List<Movie> movies) {
+    return movies.stream()
+            .map(MovieDto::from)
+            .collect(Collectors.toList());
   }
 }

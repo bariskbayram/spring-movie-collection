@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/performers")
@@ -25,8 +24,7 @@ public class PerformerController {
   @PreAuthorize("hasAuthority('data:read')")
   public String getAllPerformers(Model model) {
     List<Performer> performers = performerService.getAllPerformers();
-    List<PerformerDto> performerDTOS =
-        performers.stream().map(PerformerDto::from).collect(Collectors.toList());
+    List<PerformerDto> performerDTOS = PerformerDto.from(performers);
     model.addAttribute("performerList", performerDTOS);
     return "performer/performerList";
   }
