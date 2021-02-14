@@ -57,14 +57,14 @@ public class GenreController {
     return "redirect:/genres/get_all_genres";
   }
 
-  @RequestMapping(value = "delete_genre_by_id/", params = "id")
+  @GetMapping(value = "delete_genre_by_id/", params = "id")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   public String deleteGenreById(@RequestParam("id") int genreId) {
     genreService.deleteGenreById(genreId);
     return "redirect:/genres/get_all_genres";
   }
 
-  @RequestMapping(value = "update_genre_modal", params = {"id", "name"})
+  @GetMapping(value = "update_genre_modal", params = {"id", "name"})
   @PreAuthorize("hasAuthority('data:update')")
   public String updateGenreModal(@RequestParam("id") int genreId,
                                  @RequestParam("name") String genreName,
@@ -79,7 +79,7 @@ public class GenreController {
     return "fragments :: editModal";
   }
 
-  @RequestMapping(value = "update_genre_by_id/", params = {"id", "genreName"})
+  @GetMapping(value = "update_genre_by_id/", params = {"id", "genreName"})
   @PreAuthorize("hasAuthority('data:update')")
   public String updateGenreById(@RequestParam("id") int genreId,
                                 @RequestParam("genreName") String genreName) {

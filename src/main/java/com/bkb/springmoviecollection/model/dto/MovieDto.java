@@ -21,9 +21,6 @@ public class MovieDto {
   private List<Integer> selectedLanguageIdList = new ArrayList<>();
   private List<PerformerDto> selectedPerformerDtoList = new ArrayList<>();
 
-  public MovieDto() {
-  }
-
   public String getPhotosImagePath() {
     if(mediaPath == null || movieId == 0 ) {
       return null;

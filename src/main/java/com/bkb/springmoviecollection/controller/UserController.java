@@ -46,14 +46,14 @@ public class UserController {
     return "user/adminPage";
   }
 
-  @RequestMapping(value = "setAdmin/", params = "id")
+  @GetMapping(value = "setAdmin/", params = "id")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   public String setAdminPermissions(@RequestParam("id") int id) {
     cUserDetailsService.updateUserPermission(id, "ADMIN");
     return "redirect:/users/display_admin_panel";
   }
 
-  @RequestMapping(value = "setUser/", params = "id")
+  @GetMapping(value = "setUser/", params = "id")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   public String setUserPermissions(@RequestParam("id") int id) {
     cUserDetailsService.updateUserPermission(id, "USER");

@@ -50,14 +50,14 @@ public class PerformerController {
     return "redirect:/performers/get_all_performers";
   }
 
-  @RequestMapping(value = "delete_performer_by_id/", params = "id")
+  @GetMapping(value = "delete_performer_by_id/", params = "id")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   public String deletePerformerById(@RequestParam("id") int performerId) {
     performerService.deletePerformerById(performerId);
     return "redirect:/performers/get_all_performers";
   }
 
-  @RequestMapping(value = "update_performer_modal", params = {"id", "name"})
+  @GetMapping(value = "update_performer_modal", params = {"id", "name"})
   @PreAuthorize("hasAuthority('data:update')")
   public String updateGenreModal(@RequestParam("id") int performerId,
                                  @RequestParam("name") String fullname,
@@ -71,7 +71,7 @@ public class PerformerController {
     return "fragments :: editModal";
   }
 
-  @RequestMapping(value = "update_performer_by_id/", params = {"id", "fullname"})
+  @GetMapping(value = "update_performer_by_id/", params = {"id", "fullname"})
   @PreAuthorize("hasAuthority('data:update')")
   public String updateGenreById(@RequestParam("id") int performerId,
                                 @RequestParam("fullname") String fullname) {

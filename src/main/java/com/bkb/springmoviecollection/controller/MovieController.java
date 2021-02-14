@@ -147,14 +147,14 @@ public class MovieController {
     }
   }
 
-  @RequestMapping(value = "delete_by_id", params = "id")
+  @GetMapping(value = "delete_by_id", params = "id")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   public String deleteMovieById(@RequestParam("id") int movieId) {
     movieService.deleteMovieById(movieId);
     return "redirect:/movies/get_all_movies";
   }
 
-  @RequestMapping(value = "delete_assoc_movie_genre/", params = {"movieId", "genreId"})
+  @GetMapping(value = "delete_assoc_movie_genre/", params = {"movieId", "genreId"})
   @PreAuthorize("hasAuthority('data:update')")
   public String removeAssocMovieGenre(@RequestParam("movieId") int movieId,
                                       @RequestParam("genreId") int genreId) {
@@ -163,7 +163,7 @@ public class MovieController {
     return String.format("redirect:/movies/get_by_id/?id=%s", movieId);
   }
 
-  @RequestMapping(value = "delete_assoc_movie_language/", params = {"movieId", "languageId"})
+  @GetMapping(value = "delete_assoc_movie_language/", params = {"movieId", "languageId"})
   @PreAuthorize("hasAuthority('data:update')")
   public String removeAssocMovieLanguage(@RequestParam("movieId") int movieId,
                                       @RequestParam("languageId") int languageId) {
@@ -172,7 +172,7 @@ public class MovieController {
     return String.format("redirect:/movies/get_by_id/?id=%s", movieId);
   }
 
-  @RequestMapping(value = "removeassoc_movie_performer", params = {"movieId", "performerId"})
+  @GetMapping(value = "removeassoc_movie_performer", params = {"movieId", "performerId"})
   @PreAuthorize("hasAuthority('data:update')")
   public String removeAssocMoviePerformer(@RequestParam("movieId") int movieId,
                                           @RequestParam("performerId") int performerId) {
@@ -181,7 +181,7 @@ public class MovieController {
     return String.format("redirect:/movies/get_by_id/?id=%s", movieId);
   }
 
-  @RequestMapping(value = "update_role_modal/", params = {"movieId", "performerId", "currentRole"})
+  @GetMapping(value = "update_role_modal/", params = {"movieId", "performerId", "currentRole"})
   @PreAuthorize("hasAuthority('data:update')")
   public String updateRoleModal(@RequestParam("movieId") int movieId,
                                  @RequestParam("performerId") int performerId,
@@ -198,7 +198,7 @@ public class MovieController {
     return "fragments :: editModal";
   }
 
-  @RequestMapping(value = "update_role/", params = {"movieId", "performerId", "newRole"})
+  @GetMapping(value = "update_role/", params = {"movieId", "performerId", "newRole"})
   @PreAuthorize("hasAuthority('data:update')")
   public String updateGenreById(@RequestParam("movieId") int movieId,
                                 @RequestParam("performerId") int performerId,
@@ -207,7 +207,7 @@ public class MovieController {
     return String.format("redirect:/movies/get_by_id/?id=%s", movieId);
   }
 
-  @RequestMapping(value = "add_performer_to_movie_modal/", params = "movieId")
+  @GetMapping(value = "add_performer_to_movie_modal/", params = "movieId")
   @PreAuthorize("hasAuthority('data:update')")
   public String addPerformerToMovieModal(@RequestParam("movieId") int movieId, Model model) {
     List<Performer> performers = performerService.getAllPerformers();
@@ -220,7 +220,7 @@ public class MovieController {
     return "fragments :: addPerformerModal";
   }
 
-  @RequestMapping(value = "add_performer_to_movie/", params = "movieId")
+  @GetMapping(value = "add_performer_to_movie/", params = "movieId")
   @PreAuthorize("hasAuthority('data:update')")
   public String addPerformerToMovie(@RequestParam("movieId") int movieId,
                                     MovieDto movieDto) {
