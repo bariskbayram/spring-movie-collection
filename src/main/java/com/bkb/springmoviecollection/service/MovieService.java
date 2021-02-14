@@ -40,8 +40,8 @@ public class MovieService {
                         List<Genre> genres,
                         List<Language> languages) {
 
-    languages.stream().forEach(movie::addLanguage);
-    genres.stream().forEach(movie::addGenre);
+    languages.forEach(movie::addLanguage);
+    genres.forEach(movie::addGenre);
     return movieRepository.save(movie);
   }
 

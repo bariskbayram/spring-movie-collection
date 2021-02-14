@@ -13,7 +13,7 @@ public class MvcConfig implements WebMvcConfigurer {
 
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    exposeDirectory("movie-photos", registry);
+    exposeDirectory(registry);
   }
 
   @Override
@@ -24,8 +24,8 @@ public class MvcConfig implements WebMvcConfigurer {
   }
 
   //Exposing directory for saving movie medias
-  private void exposeDirectory(String dir, ResourceHandlerRegistry registry) {
-    Path uploadDir = Paths.get(dir);
+  private void exposeDirectory(ResourceHandlerRegistry registry) {
+    Path uploadDir = Paths.get("movie-photos");
     String uploadPath = uploadDir.toFile().getAbsolutePath();
     registry.addResourceHandler("/movie-photos/**").addResourceLocations("file:./" + uploadPath + "/");
   }

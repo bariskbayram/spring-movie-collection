@@ -28,14 +28,14 @@ public class LanguageController {
 
   @GetMapping("get_by_id/{id}")
   @PreAuthorize("hasAuthority('data:read')")
-  public LanguageDto getLanguageById(@RequestParam("id") int languageId) {
+  public LanguageDto getLanguageById(@PathVariable("id") int languageId) {
     Language language = languageService.getLanguageById(languageId);
     return LanguageDto.from(language);
   }
 
   @GetMapping("get_by_movie_id/{id}")
   @PreAuthorize("hasAuthority('data:read')")
-  public List<LanguageDto> getLanguageByMovieId(@RequestParam("id") int movieId) {
+  public List<LanguageDto> getLanguageByMovieId(@PathVariable("id") int movieId) {
     List<Language> languages = languageService.getLanguageByMovieId(movieId);
     return LanguageDto.from(languages);
   }
@@ -49,7 +49,7 @@ public class LanguageController {
 
   @DeleteMapping("delete_language_by_id/{id}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
-  public void deleteLanguageById(@RequestParam("id") int languageId) {
+  public void deleteLanguageById(@PathVariable("id") int languageId) {
     languageService.deleteLanguageById(languageId);
   }
 

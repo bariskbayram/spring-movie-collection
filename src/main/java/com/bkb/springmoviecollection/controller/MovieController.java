@@ -191,7 +191,7 @@ public class MovieController {
     //Trying to use same modal for all edit operations to be more modular
     model.addAttribute("title", "Edit Performer Role");
     model.addAttribute("url",
-        String.format("/movies/update_role/?movieId=%s&performerId=%s", new Object[]{movieId, performerId}));
+        String.format("/movies/update_role/?movieId=%s&performerId=%s", movieId, performerId));
     model.addAttribute("modalId", "editPerformerRoleModal");
     model.addAttribute("field", "newRole");
     model.addAttribute("value", currentRole);
@@ -204,7 +204,7 @@ public class MovieController {
                                 @RequestParam("performerId") int performerId,
                                 @RequestParam("newRole") String newRole) {
     moviePerformerService.changeRole(movieId, performerId, newRole);
-    return String.format("redirect:/movies/get_by_id/?id=%s", new Object[]{movieId});
+    return String.format("redirect:/movies/get_by_id/?id=%s", movieId);
   }
 
   @RequestMapping(value = "add_performer_to_movie_modal/", params = "movieId")
@@ -215,7 +215,7 @@ public class MovieController {
 
     model.addAttribute("performerList", performerDtos);
     model.addAttribute("url",
-        String.format("/movies/add_performer_to_movie/?movieId=%s", new Object[]{movieId}));
+        String.format("/movies/add_performer_to_movie/?movieId=%s", movieId));
     model.addAttribute("movieDto", new MovieDto());
     return "fragments :: addPerformerModal";
   }

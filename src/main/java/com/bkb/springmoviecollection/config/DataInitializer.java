@@ -18,7 +18,7 @@ public class DataInitializer implements CommandLineRunner {
   }
 
   @Override
-  public void run(String... args) throws Exception {
+  public void run(String... args) {
     User user = new User();
     user.setUsername("user");
     user.setFullname("default user");

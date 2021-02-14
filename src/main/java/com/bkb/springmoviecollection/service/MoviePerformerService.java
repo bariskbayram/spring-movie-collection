@@ -18,7 +18,7 @@ public class MoviePerformerService {
   }
 
   public void addPerformersToMovie(Movie movie, List<Performer> performerList) {
-    performerList.stream().forEach(performer ->
+    performerList.forEach(performer ->
         moviePerformerRepository.save(new MoviePerformer(movie, performer, performer.getPerformerRole())));
   }
 

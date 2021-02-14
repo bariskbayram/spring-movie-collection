@@ -31,14 +31,14 @@ public class GenreController {
 
   @GetMapping("get_by_id/{id}")
   @PreAuthorize("hasAuthority('data:read')")
-  public GenreDto getGenreById(@RequestParam("id") int genreId) {
+  public GenreDto getGenreById(@PathVariable("id") int genreId) {
     Genre genre = genreService.getGenreById(genreId);
     return GenreDto.from(genre);
   }
 
   @GetMapping("get_by_movie_id/{id}")
   @PreAuthorize("hasAuthority('data:read')")
-  public List<GenreDto> getGenreByMovieId(@RequestParam("id") int movieId) {
+  public List<GenreDto> getGenreByMovieId(@PathVariable("id") int movieId) {
     List<Genre> genres = genreService.getGenreByMovieId(movieId);
     return GenreDto.from(genres);
   }

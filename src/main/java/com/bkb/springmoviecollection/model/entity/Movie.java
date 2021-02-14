@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,21 +77,11 @@ public class Movie {
   }
 
   public void removeGenre(Genre genre) {
-    for (Iterator<Genre> iterator = genres.iterator(); iterator.hasNext(); ) {
-      Genre g = iterator.next();
-      if (g.getGenreId() == genre.getGenreId()) {
-        iterator.remove();
-      }
-    }
+    genres.removeIf(g -> g.getGenreId() == genre.getGenreId());
   }
 
   public void removeLanguage(Language language) {
-    for (Iterator<Language> iterator = languages.iterator(); iterator.hasNext(); ) {
-      Language l = iterator.next();
-      if (l.getLanguageId() == language.getLanguageId()) {
-        iterator.remove();
-      }
-    }
+    languages.removeIf(l -> l.getLanguageId() == language.getLanguageId());
   }
 
   public static Movie from(MovieDto movieDTO) {

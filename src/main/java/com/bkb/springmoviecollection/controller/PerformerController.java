@@ -31,7 +31,7 @@ public class PerformerController {
 
   @GetMapping("get_by_id/{id}")
   @PreAuthorize("hasAuthority('data:read')")
-  public PerformerDto getPerformerById(@RequestParam("id") int performerId) {
+  public PerformerDto getPerformerById(@PathVariable("id") int performerId) {
     Performer performer = performerService.getPerformerById(performerId);
     return PerformerDto.from(performer);
   }
@@ -64,7 +64,7 @@ public class PerformerController {
                                  Model model) {
 
     model.addAttribute("title", "Edit Performer");
-    model.addAttribute("url", String.format("/performers/update_performer_by_id/?id=%s", new Object[]{performerId}));
+    model.addAttribute("url", String.format("/performers/update_performer_by_id/?id=%s", performerId));
     model.addAttribute("modalId", "editPerformerModal");
     model.addAttribute("field", "fullname");
     model.addAttribute("value", fullname);

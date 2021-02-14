@@ -22,16 +22,6 @@ public class PerformerDto {
     this.performerRole = performerRole;
   }
 
-  public PerformerDto(int performerId, String performerRole) {
-    this.performerId = performerId;
-    this.performerRole = performerRole;
-  }
-
-  public PerformerDto(String fullname, int performerId) {
-    this.performerId = performerId;
-    this.fullname = fullname;
-  }
-
   public static PerformerDto from(Performer performer) {
     PerformerDto performerDTO = new PerformerDto();
     performerDTO.setPerformerId(performer.getPerformerId());
